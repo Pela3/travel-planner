@@ -1,0 +1,217 @@
+import 'package:flutter/material.dart';
+
+import '../../../models/parada_confirmada.dart';
+import '../../../services/enlaces_externos.dart';
+import '../widgets/alojamiento_card.dart';
+import '../widgets/atraccion_card.dart';
+import '../widgets/buscador_ciudad_manual.dart';
+import '../widgets/clima_card.dart';
+import '../widgets/cronograma_diario.dart';
+import '../widgets/itinerario_hero.dart';
+import '../widgets/selector_dias_card.dart';
+import '../widgets/traslado_card.dart';
+
+// PASO 5: Itinerario con cabecera e información
+class PasoItinerario extends StatelessWidget {
+  /// Respuesta cruda de /planificar para la parada que se está revisando.
+  final Map<String, dynamic>? paradaActual;
+  final List<ParadaConfirmada> itinerario;
+  final int diasTotales;
+  final int diasRestantes;
+  final int costoAcumulado;
+  final int diasSeleccionados;
+  final int diaCronogramaSeleccionado;
+  final DateTime fechaInicioParada;
+
+  /// Ciudad desde la que se viaja a esta parada (para buscar pasajes).
+  final String ciudadOrigenTraslado;
+
+  final ValueChanged<int> onDiasSeleccionadosChanged;
+  final ValueChanged<int> onDiaCronogramaChanged;
+
+  /// Confirma la parada actual. Con ciudad: sigue a esa ciudad; con null: finaliza.
+  final ValueChanged<String?> onConfirmar;
+  final VoidCallback onExportarPdf;
+
+  const PasoItinerario({
+    super.key,
+    required this.paradaActual,
+    required this.itinerario,
+    required this.diasTotales,
+    required this.diasRestantes,
+    required this.costoAcumulado,
+    required this.diasSeleccionados,
+    required this.diaCronogramaSeleccionado,
+    required this.fechaInicioParada,
+    required this.ciudadOrigenTraslado,
+    required this.onDiasSeleccionadosChanged,
+    required this.onDiaCronogramaChanged,
+    required this.onConfirmar,
+    required this.onExportarPdf,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (paradaActual == null && itinerario.isEmpty) {
+      return const Center(child: Text('No hay datos disponibles.', style: TextStyle(color: Colors.white70)));
+    }
+
+    final String ciudadNombre = paradaActual?['ciudad_actual'] ?? (itinerario.isNotEmpty ? itinerario.last.ciudad : 'Destino');
+
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header Hero con foto dinámica
+          ItinerarioHero(
+            ciudad: ciudadNombre,
+            diasUsados: diasTotales - diasRestantes,
+            diasTotales: diasTotales,
+            costoAcumulado: costoAcumulado,
+            onExportarPdf: diasRestantes <= 0 ? onExportarPdf : null,
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (paradaActual != null)
+                  ..._buildDetalleParada(paradaActual!, ciudadNombre)
+                else if (diasRestantes <= 0)
+                  _buildViajeCompletado(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildDetalleParada(Map<String, dynamic> parada, String ciudadNombre) {
+    final diasRecomendadosIA = parada['dias_recomendados'] as int? ?? 2;
+
+    return [
+      // Clima y vestimenta
+      if (parada['clima'] != null) ...[
+        ClimaCard(clima: parada['clima']),
+        const SizedBox(height: 16),
+      ],
+
+      // Resumen de la ciudad
+      Text(
+        parada['resumen'] ?? '',
+        style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13, height: 1.4),
+      ),
+      const SizedBox(height: 20),
+
+      // DÍAS EN ESTA CIUDAD + RECOMENDACIÓN DE LA IA
+      SelectorDiasCard(
+        diasRecomendados: diasRecomendadosIA,
+        diasSeleccionados: diasSeleccionados,
+        diasRestantes: diasRestantes,
+        onChanged: onDiasSeleccionadosChanged,
+      ),
+      const SizedBox(height: 24),
+
+      // 1° ATRACCIONES & ENTRADAS (ARRIBA DEL CRONOGRAMA)
+      const Text(
+        'Atracciones & Entradas sugeridas',
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+      ),
+      const SizedBox(height: 12),
+      ...?(parada['atracciones'] as List<dynamic>?)?.map((a) {
+        final String nombreAtraccion = a['nombre'] ?? '';
+        return AtraccionCard(
+          nombre: nombreAtraccion,
+          requiereTicket: a['requiere_ticket'] as bool? ?? false,
+          consejo: a['consejo_reserva'] ?? '',
+          onReservar: () => EnlacesExternos.abrirCompraEntrada(nombreAtraccion, ciudadNombre),
+        );
+      }),
+      const SizedBox(height: 48),
+
+      AlojamientoCard(
+        ciudad: ciudadNombre,
+        onVerBooking: () => EnlacesExternos.abrirBooking(ciudadNombre),
+      ),
+
+      if (parada['traslado'] != null)
+        TrasladoCard(
+          traslado: parada['traslado'],
+          onBuscarPasajes: () => EnlacesExternos.abrirOmio(ciudadOrigenTraslado, ciudadNombre),
+        ),
+
+      // CRONOGRAMA DIARIO
+      CronogramaDiario(
+        cronograma: (parada['cronograma_dias'] as List<dynamic>?) ?? [],
+        diasSeleccionados: diasSeleccionados,
+        diaSeleccionado: diaCronogramaSeleccionado,
+        fechaInicio: fechaInicioParada,
+        onDiaSeleccionado: onDiaCronogramaChanged,
+      ),
+      const SizedBox(height: 24),
+
+      // Próximas paradas o Finalizar
+      if (diasSeleccionados == diasRestantes)
+        SizedBox(
+          width: double.infinity,
+          height: 52,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF10B981),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            ),
+            onPressed: () => onConfirmar(null),
+            child: const Text('Confirmar y Finalizar Itinerario', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          ),
+        )
+      else ...[
+        const Text('Siguiente ciudad sugerida:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+        const SizedBox(height: 10),
+        ...?(parada['proximas_paradas'] as List<dynamic>?)?.map((p) => Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              child: ListTile(
+                tileColor: const Color(0xFF131D31),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  side: const BorderSide(color: Color(0xFF1E293B)),
+                ),
+                leading: const Icon(Icons.directions_train, color: Color(0xFF38BDF8)),
+                title: Text(p['ciudad'] ?? '', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                subtitle: Text('${p['tiempo_traslado']} • ${p['por_que_visitarlo']}', style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11)),
+                trailing: const Icon(Icons.arrow_forward_ios, color: Color(0xFF64748B), size: 14),
+                onTap: () => onConfirmar(p['ciudad']),
+              ),
+            )),
+        BuscadorCiudadManual(onBuscar: onConfirmar),
+      ],
+    ];
+  }
+
+  // Viaje terminado
+  Widget _buildViajeCompletado() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: const Color(0xFF131D31),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFF10B981)),
+      ),
+      child: Column(
+        children: [
+          const Icon(Icons.check_circle, color: Color(0xFF10B981), size: 48),
+          const SizedBox(height: 12),
+          const Text('¡Viaje completado!', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 6),
+          Text(
+            'Presupuesto total estimado: ~USD $costoAcumulado',
+            style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+          ),
+        ],
+      ),
+    );
+  }
+}

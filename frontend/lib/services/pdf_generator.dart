@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -7,11 +8,13 @@ import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/viaje_guardado.dart';
 
-Future<void> exportarItinerarioPdf(ViajeGuardado viaje) async {
+/// Genera el PDF del itinerario. No necesita internet.
+Future<Uint8List> generarPdfItinerario(ViajeGuardado viaje) async {
   final pdf = pw.Document();
 
-  final fontRegular = await PdfGoogleFonts.openSansRegular();
-  final fontBold = await PdfGoogleFonts.openSansBold();
+  // Fuentes empaquetadas (antes se bajaban de Google Fonts y sin internet fallaba).
+  final fontRegular = pw.Font.ttf(await rootBundle.load('assets/fonts/OpenSans-Regular.ttf'));
+  final fontBold = pw.Font.ttf(await rootBundle.load('assets/fonts/OpenSans-Bold.ttf'));
 
   pdf.addPage(
     pw.MultiPage(
@@ -32,7 +35,7 @@ Future<void> exportarItinerarioPdf(ViajeGuardado viaje) async {
                 children: [
                   pw.Text('ITINERARIO DE VIAJE', style: pw.TextStyle(font: fontBold, fontSize: 22, color: PdfColors.indigo900)),
                   pw.SizedBox(height: 4),
-                  pw.Text(viaje.titulo, style: pw.TextStyle(font: fontBold, fontSize: 13, color: PdfColors.grey800)),
+                  pw.Text(_textoPdf(viaje.titulo), style: pw.TextStyle(font: fontBold, fontSize: 13, color: PdfColors.grey800)),
                 ],
               ),
               pw.Column(
@@ -121,7 +124,11 @@ Future<void> exportarItinerarioPdf(ViajeGuardado viaje) async {
     ),
   );
 
-  final pdfBytes = await pdf.save();
+  return pdf.save();
+}
+
+Future<void> exportarItinerarioPdf(ViajeGuardado viaje) async {
+  final pdfBytes = await generarPdfItinerario(viaje);
 
   if (kIsWeb) {
     await Printing.layoutPdf(onLayout: (format) async => pdfBytes);
@@ -140,3 +147,6 @@ Future<void> exportarItinerarioPdf(ViajeGuardado viaje) async {
     text: 'Te comparto el itinerario completo en PDF.',
   ));
 }
+
+// Open Sans no tiene la flecha "➔" que usamos en los títulos de la app.
+String _textoPdf(String texto) => texto.replaceAll('➔', '›');

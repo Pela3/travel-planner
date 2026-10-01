@@ -263,6 +263,7 @@ class PasoItinerario extends StatelessWidget {
   // Viaje terminado
   Widget _buildViajeCompletado() {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: const Color(0xFF131D31),

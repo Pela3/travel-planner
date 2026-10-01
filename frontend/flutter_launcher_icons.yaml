@@ -1,0 +1,19 @@
+# Genera los íconos de la app: dart run flutter_launcher_icons
+# Fuente: branding/icono_app.png (1024x1024, dibujo dentro del 60% central).
+flutter_launcher_icons:
+  image_path: "branding/icono_app.png"
+
+  android: "ic_launcher"
+  min_sdk_android: 21
+  # Ícono adaptativo: todo el arte va en la capa de fondo; la capa delantera
+  # es transparente. Cuando tengamos el dibujo sin fondo, va como foreground.
+  adaptive_icon_background: "branding/icono_app.png"
+  adaptive_icon_foreground: "branding/transparente.png"
+
+  ios: true
+  remove_alpha_ios: true # la App Store no acepta íconos con transparencia
+
+  web:
+    generate: true
+    background_color: "#0B111E"
+    theme_color: "#0B111E"

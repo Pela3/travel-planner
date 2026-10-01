@@ -2,3 +2,5 @@
 *.exe
 *.test
 bin/
+# Caché local de respuestas de la IA (se genera en runtime)
+cache.json

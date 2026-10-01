@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../models/models.dart';
@@ -122,6 +124,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
         diasRestantes: _diasRestantes,
         estilo: _estiloSeleccionado,
         mes: _mesDeFechaSalida,
+        compania: _companiaSeleccionada,
       );
       final diasRecomendados = data['dias_recomendados'] as int? ?? 1;
 
@@ -135,8 +138,11 @@ class _PlannerScreenState extends State<PlannerScreen> {
       }
     } on ApiException catch (e) {
       _mostrarErrorConsulta(e.toString());
+    } on TimeoutException {
+      _mostrarErrorConsulta('El servidor tardó demasiado en responder. Intentá de nuevo.');
     } catch (e) {
-      _mostrarErrorConsulta('Fallo de conexión: $e');
+      debugPrint('Error consultando destino: $e');
+      _mostrarErrorConsulta('No pudimos conectarnos con el servidor. Revisá tu conexión.');
     }
   }
 
@@ -144,13 +150,31 @@ class _PlannerScreenState extends State<PlannerScreen> {
     if (!mounted) return;
     setState(() {
       _isLoading = false;
-      _pasoActual = 1;
       _error = mensaje;
+      // Si ya hay paradas confirmadas no tiramos el viaje: el paso 5 permite
+      // reintentar o elegir otra ciudad. Solo la primera parada vuelve al paso 1.
+      _pasoActual = _itinerario.isEmpty ? 1 : 5;
     });
   }
 
+  /// Pide a la IA la siguiente parada partiendo de la última ciudad confirmada.
+  void _continuarHacia(String ciudad) {
+    setState(() {
+      _isLoading = true;
+      _loadingStep = 2;
+      _diaCronogramaSeleccionado = 1;
+    });
+    _consultarDestino(_itinerario.last.ciudad, ciudad);
+  }
+
+  void _avisar(String mensaje) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensaje)));
+  }
+
   Future<void> _confirmarYContinuar(String? siguienteCiudad) async {
-    if (_paradaActualData == null) return;
+    // Evita confirmar dos veces la misma parada con un doble toque.
+    if (_paradaActualData == null || _isLoading) return;
 
     final diasEfectivos = _diasSeleccionados > _diasRestantes ? _diasRestantes : _diasSeleccionados;
     final origen = _itinerario.isEmpty ? _origenController.text.trim() : _itinerario.last.ciudad;
@@ -182,6 +206,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
         cronogramaParseado.addAll(nuevosDias);
       } catch (e) {
         debugPrint('Error extendiendo cronograma con IA: $e');
+        _avisar('No pudimos generar el detalle de los días extra. La parada se guardó igual.');
       } finally {
         if (mounted) {
           setState(() {
@@ -226,12 +251,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
     });
 
     if (_diasRestantes > 0 && siguienteCiudad != null && siguienteCiudad.isNotEmpty) {
-      final nuevaCiudadOrigen = _itinerario.last.ciudad;
-      setState(() {
-        _isLoading = true;
-        _loadingStep = 2;
-      });
-      _consultarDestino(nuevaCiudadOrigen, siguienteCiudad);
+      _continuarHacia(siguienteCiudad);
     } else if (_diasRestantes <= 0) {
       ViajesStorage.guardar(_construirViaje());
     }
@@ -294,6 +314,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
       case 4:
         return PasoGenerando(loadingStep: _loadingStep);
       case 5:
+        if (_isLoading) return PasoGenerando(loadingStep: _loadingStep);
         return PasoItinerario(
           paradaActual: _paradaActualData,
           itinerario: _itinerario,
@@ -307,6 +328,8 @@ class _PlannerScreenState extends State<PlannerScreen> {
           onDiasSeleccionadosChanged: (dias) => setState(() => _diasSeleccionados = dias),
           onDiaCronogramaChanged: (dia) => setState(() => _diaCronogramaSeleccionado = dia),
           onConfirmar: _confirmarYContinuar,
+          error: _error,
+          onReintentar: _continuarHacia,
           onExportarPdf: () => exportarItinerarioPdf(_construirViaje()),
         );
       case 1:

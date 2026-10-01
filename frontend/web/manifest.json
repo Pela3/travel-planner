@@ -1,6 +1,6 @@
 {
-    "name": "frontend",
-    "short_name": "frontend",
+    "name": "Travel Planner",
+    "short_name": "Travel Planner",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

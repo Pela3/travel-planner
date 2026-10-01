@@ -33,6 +33,12 @@ class PasoItinerario extends StatelessWidget {
   final ValueChanged<String?> onConfirmar;
   final VoidCallback onExportarPdf;
 
+  /// Error al pedir la siguiente parada (el viaje sigue a medio armar).
+  final String? error;
+
+  /// Vuelve a pedir una parada desde la última ciudad confirmada.
+  final ValueChanged<String> onReintentar;
+
   const PasoItinerario({
     super.key,
     required this.paradaActual,
@@ -48,6 +54,8 @@ class PasoItinerario extends StatelessWidget {
     required this.onDiaCronogramaChanged,
     required this.onConfirmar,
     required this.onExportarPdf,
+    required this.error,
+    required this.onReintentar,
   });
 
   @override
@@ -80,7 +88,9 @@ class PasoItinerario extends StatelessWidget {
                 if (paradaActual != null)
                   ..._buildDetalleParada(paradaActual!, ciudadNombre)
                 else if (diasRestantes <= 0)
-                  _buildViajeCompletado(),
+                  _buildViajeCompletado()
+                else
+                  ..._buildErrorSiguienteParada(),
               ],
             ),
           ),
@@ -93,6 +103,11 @@ class PasoItinerario extends StatelessWidget {
     final diasRecomendadosIA = parada['dias_recomendados'] as int? ?? 2;
 
     return [
+      if (parada['es_fallback'] == true) ...[
+        _buildAvisoFallback(),
+        const SizedBox(height: 16),
+      ],
+
       // Clima y vestimenta
       if (parada['clima'] != null) ...[
         ClimaCard(clima: parada['clima']),
@@ -188,6 +203,60 @@ class PasoItinerario extends StatelessWidget {
             )),
         BuscadorCiudadManual(onBuscar: onConfirmar),
       ],
+    ];
+  }
+
+  // La IA no respondió y el backend mandó un plan genérico.
+  Widget _buildAvisoFallback() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF59E0B).withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.5)),
+      ),
+      child: const Row(
+        children: [
+          Icon(Icons.info_outline, color: Color(0xFFF59E0B), size: 20),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'La IA no está disponible en este momento. Te mostramos un plan genérico; '
+              'podés reintentar en unos minutos para obtener uno personalizado.',
+              style: TextStyle(color: Color(0xFFFDE68A), fontSize: 12, height: 1.35),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Falló la consulta de la siguiente parada: permitir reintentar sin perder el viaje.
+  List<Widget> _buildErrorSiguienteParada() {
+    return [
+      Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: const Color(0xFF131D31),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.redAccent.withValues(alpha: 0.5)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.wifi_off, color: Colors.redAccent, size: 20),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'No pudimos armar la siguiente parada${error != null ? ' ($error)' : ''}. '
+                'Tu viaje sigue guardado hasta acá: probá de nuevo o elegí otra ciudad.',
+                style: const TextStyle(color: Colors.white70, fontSize: 12, height: 1.35),
+              ),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 8),
+      BuscadorCiudadManual(onBuscar: onReintentar),
     ];
   }
 

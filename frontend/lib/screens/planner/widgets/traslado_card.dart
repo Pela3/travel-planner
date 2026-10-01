@@ -9,6 +9,9 @@ class TrasladoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final costo = traslado['costo_estimado'] as int? ?? 0;
+    final duracion = 'Duración: ${traslado['duracion_estimada'] ?? 'N/A'}';
+
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
       padding: const EdgeInsets.all(16),
@@ -32,7 +35,7 @@ class TrasladoCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Duración: ${traslado['duracion_estimada'] ?? 'N/A'} • Costo estimado: ~USD ${traslado['costo_estimado'] ?? 0}',
+            costo > 0 ? '$duracion • Costo estimado: ~USD $costo' : duracion,
             style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
           ),
           const SizedBox(height: 12),

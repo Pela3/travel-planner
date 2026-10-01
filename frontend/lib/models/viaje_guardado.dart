@@ -25,6 +25,16 @@ class ViajeGuardado {
     required this.paradas,
   });
 
+  /// Día siguiente al último día del viaje.
+  DateTime get fechaFin => fechaInicio.add(Duration(days: diasTotales));
+
+  /// Un viaje es pasado cuando ya terminó (comparando solo fechas).
+  bool esPasado(DateTime ahora) {
+    final hoy = DateTime(ahora.year, ahora.month, ahora.day);
+    final fin = DateTime(fechaFin.year, fechaFin.month, fechaFin.day);
+    return !fin.isAfter(hoy);
+  }
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'titulo': titulo,

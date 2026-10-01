@@ -101,11 +101,13 @@ Future<void> exportarItinerarioPdf(ViajeGuardado viaje) async {
                 if (parada.cronograma.isNotEmpty) ...[
                   pw.SizedBox(height: 8),
                   pw.Text('Cronograma de actividades:', style: pw.TextStyle(font: fontBold, fontSize: 10)),
-                  ...parada.cronograma.map(
-                    (c) => pw.Padding(
+                  // Numerado por posición: viajes guardados antes del fix pueden
+                  // tener "dia" repetido por la IA.
+                  ...parada.cronograma.indexed.map(
+                    (e) => pw.Padding(
                       padding: const pw.EdgeInsets.only(top: 3),
                       child: pw.Text(
-                        'Día ${c.dia}: M: ${c.manana} | T: ${c.tarde} | N: ${c.noche}',
+                        'Día ${e.$1 + 1}: M: ${e.$2.manana} | T: ${e.$2.tarde} | N: ${e.$2.noche}',
                         style: pw.TextStyle(font: fontRegular, fontSize: 8.5, color: PdfColors.grey800),
                       ),
                     ),

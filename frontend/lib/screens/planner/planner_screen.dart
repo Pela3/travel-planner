@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../models/models.dart';
+import '../../services/cronograma.dart';
 import '../../services/pdf_generator.dart';
 import '../../services/travel_api.dart';
 import '../../services/viajes_storage.dart';
@@ -41,6 +42,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
 
   bool _isLoading = false;
   int _loadingStep = 0;
+  String? _mensajeCarga; // Texto de la pantalla de carga (null = checklist)
   String? _error;
 
   final List<ParadaConfirmada> _itinerario = [];
@@ -180,42 +182,52 @@ class _PlannerScreenState extends State<PlannerScreen> {
     final origen = _itinerario.isEmpty ? _origenController.text.trim() : _itinerario.last.ciudad;
 
     final rawCronograma = (_paradaActualData!['cronograma_dias'] as List<dynamic>?) ?? [];
-    List<ActividadDia> cronogramaParseado = rawCronograma
+    final cronogramaBase = rawCronograma
         .map((c) => ActividadDia.fromJson(c as Map<String, dynamic>))
         .toList();
 
-    // 👉 SI EL USUARIO EXTENDIÓ DÍAS MÁS ALLÁ DE LO QUE LA IA HABÍA MANDADO
-    if (diasEfectivos > cronogramaParseado.length) {
+    // Si el usuario eligió más días de los que precargó la IA, se piden los
+    // faltantes (en tandas) antes de confirmar la parada.
+    final faltanDias = diasEfectivos > cronogramaBase.length;
+    if (faltanDias) {
+      final extra = diasEfectivos - cronogramaBase.length;
       setState(() {
         _isLoading = true;
+        _mensajeCarga = 'Armando $extra ${extra == 1 ? 'día extra' : 'días extra'} en '
+            '${_paradaActualData!['ciudad_actual'] ?? 'tu destino'} sin repetir lugares...';
       });
+    }
 
-      try {
-        // Recolectamos lugares ya vistos para no repetir
-        final lugaresVistos = cronogramaParseado
-            .expand((d) => [d.manana, d.tarde, d.noche])
-            .toList();
-
-        final nuevosDias = await TravelApi.extenderCronograma(
-          ciudad: _paradaActualData!['ciudad_actual'] ?? 'Destino',
-          estilo: _estiloSeleccionado,
-          diaInicio: cronogramaParseado.length + 1,
-          diasAdicionales: diasEfectivos - cronogramaParseado.length,
-          lugaresYaVistos: lugaresVistos,
-        );
-        cronogramaParseado.addAll(nuevosDias);
-      } catch (e) {
-        debugPrint('Error extendiendo cronograma con IA: $e');
-        _avisar('No pudimos generar el detalle de los días extra. La parada se guardó igual.');
-      } finally {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
+    final ciudadActual = _paradaActualData!['ciudad_actual'] ?? 'Destino';
+    final resultado = await completarCronograma(
+      base: cronogramaBase,
+      diasObjetivo: diasEfectivos,
+      pedirDiasExtra: ({required diaInicio, required diasAdicionales, required lugaresYaVistos}) async {
+        try {
+          return await TravelApi.extenderCronograma(
+            ciudad: ciudadActual,
+            estilo: _estiloSeleccionado,
+            diaInicio: diaInicio,
+            diasAdicionales: diasAdicionales,
+            lugaresYaVistos: lugaresYaVistos,
+          );
+        } catch (e) {
+          debugPrint('Error extendiendo cronograma con IA: $e');
+          rethrow;
         }
-      }
-    } else {
-      cronogramaParseado = cronogramaParseado.take(diasEfectivos).toList();
+      },
+    );
+    final cronogramaParseado = resultado.dias;
+
+    if (!mounted) return;
+    if (faltanDias) {
+      setState(() {
+        _isLoading = false;
+        _mensajeCarga = null;
+      });
+    }
+    if (!resultado.completo) {
+      _avisar('No pudimos generar el detalle de todos los días extra. La parada se guardó igual.');
     }
 
     final rawAtracciones = (_paradaActualData!['atracciones'] as List<dynamic>?) ?? [];
@@ -314,7 +326,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
       case 4:
         return PasoGenerando(loadingStep: _loadingStep);
       case 5:
-        if (_isLoading) return PasoGenerando(loadingStep: _loadingStep);
+        if (_isLoading) return PasoGenerando(loadingStep: _loadingStep, mensaje: _mensajeCarga);
         return PasoItinerario(
           paradaActual: _paradaActualData,
           itinerario: _itinerario,

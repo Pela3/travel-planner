@@ -29,6 +29,18 @@ class ActividadDia {
     );
   }
 
+  ActividadDia copyWith({int? dia}) {
+    return ActividadDia(
+      dia: dia ?? this.dia,
+      horarioManana: horarioManana,
+      manana: manana,
+      horarioTarde: horarioTarde,
+      tarde: tarde,
+      horarioNoche: horarioNoche,
+      noche: noche,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'dia': dia,

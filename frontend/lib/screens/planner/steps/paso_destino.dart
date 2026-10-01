@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../utils/fechas.dart';
 import '../widgets/paso_encabezado.dart';
+
+/// Máximo de días de un viaje (el backend rechaza más).
+const int maxDiasViaje = 60;
 
 // PASO 1: Destino
 class PasoDestino extends StatelessWidget {
@@ -99,6 +103,7 @@ class PasoDestino extends StatelessWidget {
                   child: TextField(
                     controller: diasTotalesController,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(2)],
                     style: const TextStyle(color: Colors.white, fontSize: 14),
                     decoration: const InputDecoration(
                       labelText: 'Días totales',
@@ -134,13 +139,7 @@ class PasoDestino extends StatelessWidget {
           ],
 
           const SizedBox(height: 30),
-          BotonSiguiente(
-            onPressed: () {
-              if (destinoController.text.trim().isNotEmpty) {
-                onSiguiente();
-              }
-            },
-          ),
+          BotonSiguiente(onPressed: onSiguiente),
         ],
       ),
     );

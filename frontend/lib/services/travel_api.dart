@@ -13,6 +13,7 @@ class ApiException implements Exception {
   @override
   String toString() {
     if (statusCode == 429) return 'Demasiadas solicitudes. Esperá un minuto e intentá de nuevo.';
+    if (statusCode == 400) return 'Revisá los datos del viaje (destino, origen y días) e intentá de nuevo.';
     return 'Error del servidor: $statusCode';
   }
 }

@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 class PasoGenerando extends StatelessWidget {
   final int loadingStep;
 
-  const PasoGenerando({super.key, required this.loadingStep});
+  /// Si se indica, reemplaza el checklist (p. ej. al generar días extra).
+  final String? mensaje;
+
+  const PasoGenerando({super.key, required this.loadingStep, this.mensaje});
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +27,18 @@ class PasoGenerando extends StatelessWidget {
             const Text('Esto puede tardar unos segundos', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
             const SizedBox(height: 36),
 
-            _buildCheckItem(1, 'Analizando tu destino'),
-            _buildCheckItem(2, 'Buscando lugares imperdibles'),
-            _buildCheckItem(3, 'Calculando rutas y traslados'),
-            _buildCheckItem(4, 'Personalizando itinerario y presupuesto'),
+            if (mensaje != null)
+              Text(
+                mensaje!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white70, fontSize: 14, height: 1.4),
+              )
+            else ...[
+              _buildCheckItem(1, 'Analizando tu destino'),
+              _buildCheckItem(2, 'Buscando lugares imperdibles'),
+              _buildCheckItem(3, 'Calculando rutas y traslados'),
+              _buildCheckItem(4, 'Personalizando itinerario y presupuesto'),
+            ],
 
             const SizedBox(height: 30),
             const SizedBox(

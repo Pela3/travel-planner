@@ -42,6 +42,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
 
   bool _isLoading = false;
   int _loadingStep = 0;
+  String? _mensajeCarga; // Texto de la pantalla de carga (null = checklist)
   String? _error;
 
   final List<ParadaConfirmada> _itinerario = [];
@@ -188,7 +189,14 @@ class _PlannerScreenState extends State<PlannerScreen> {
     // Si el usuario eligió más días de los que precargó la IA, se piden los
     // faltantes (en tandas) antes de confirmar la parada.
     final faltanDias = diasEfectivos > cronogramaBase.length;
-    if (faltanDias) setState(() => _isLoading = true);
+    if (faltanDias) {
+      final extra = diasEfectivos - cronogramaBase.length;
+      setState(() {
+        _isLoading = true;
+        _mensajeCarga = 'Armando $extra ${extra == 1 ? 'día extra' : 'días extra'} en '
+            '${_paradaActualData!['ciudad_actual'] ?? 'tu destino'} sin repetir lugares...';
+      });
+    }
 
     final ciudadActual = _paradaActualData!['ciudad_actual'] ?? 'Destino';
     final resultado = await completarCronograma(
@@ -212,7 +220,12 @@ class _PlannerScreenState extends State<PlannerScreen> {
     final cronogramaParseado = resultado.dias;
 
     if (!mounted) return;
-    if (faltanDias) setState(() => _isLoading = false);
+    if (faltanDias) {
+      setState(() {
+        _isLoading = false;
+        _mensajeCarga = null;
+      });
+    }
     if (!resultado.completo) {
       _avisar('No pudimos generar el detalle de todos los días extra. La parada se guardó igual.');
     }
@@ -313,7 +326,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
       case 4:
         return PasoGenerando(loadingStep: _loadingStep);
       case 5:
-        if (_isLoading) return PasoGenerando(loadingStep: _loadingStep);
+        if (_isLoading) return PasoGenerando(loadingStep: _loadingStep, mensaje: _mensajeCarga);
         return PasoItinerario(
           paradaActual: _paradaActualData,
           itinerario: _itinerario,

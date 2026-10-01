@@ -15,6 +15,8 @@ class SelectorDiasCard extends StatelessWidget {
     required this.onChanged,
   });
 
+  bool get _puedeQuedarseTodo => diasRestantes > 1 && diasSeleccionados < diasRestantes;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -76,6 +78,24 @@ class SelectorDiasCard extends StatelessWidget {
               ),
             ],
           ),
+          // Estadía completa: asigna todos los días que quedan a esta ciudad.
+          if (_puedeQuedarseTodo)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color(0xFF38BDF8),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  visualDensity: VisualDensity.compact,
+                ),
+                icon: const Icon(Icons.home_work_outlined, size: 16),
+                label: Text(
+                  'Quedarme los $diasRestantes días restantes acá',
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+                onPressed: () => onChanged(diasRestantes),
+              ),
+            ),
         ],
       ),
     );

@@ -13,6 +13,13 @@ class PlannerHeader extends StatelessWidget {
     required this.onReiniciar,
   });
 
+  // El asistente tiene 3 pasos; el 4 es la pantalla de carga y el 5 el itinerario.
+  String get _subtitulo => switch (pasoActual) {
+        5 => 'Plan generado por IA',
+        4 => 'Generando tu viaje...',
+        _ => 'Paso $pasoActual de 3',
+      };
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -50,7 +57,7 @@ class PlannerHeader extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    pasoActual == 5 ? 'Plan generado por IA' : 'Paso $pasoActual de 4',
+                    _subtitulo,
                     style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
                   ),
                 ],

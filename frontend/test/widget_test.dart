@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:frontend/app.dart';
+import 'package:frontend/screens/main_navigation_screen.dart';
 
 void main() {
   setUp(() {
@@ -9,7 +10,7 @@ void main() {
   });
 
   testWidgets('La app arranca en Inicio y navega a Planificar', (WidgetTester tester) async {
-    await tester.pumpWidget(const TravelPlannerApp());
+    await tester.pumpWidget(const TravelPlannerApp(home: MainNavigationScreen()));
     await tester.pump();
 
     expect(find.text('¡Hola, viajero! 👋'), findsOneWidget);
@@ -21,7 +22,7 @@ void main() {
   });
 
   testWidgets('Mis Viajes muestra estado vacío sin viajes guardados', (WidgetTester tester) async {
-    await tester.pumpWidget(const TravelPlannerApp());
+    await tester.pumpWidget(const TravelPlannerApp(home: MainNavigationScreen()));
     await tester.tap(find.text('Mis Viajes'));
     await tester.pumpAndSettle();
 

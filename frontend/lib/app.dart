@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'screens/main_navigation_screen.dart';
+import 'screens/auth/auth_gate.dart';
 
 class TravelPlannerApp extends StatelessWidget {
-  const TravelPlannerApp({super.key});
+  /// Pantalla inicial. Los tests pasan la app directa, sin login.
+  final Widget home;
+
+  const TravelPlannerApp({super.key, this.home = const AuthGate()});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Travel Planner AI',
+      title: 'Travel Planner',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
@@ -29,7 +32,7 @@ class TravelPlannerApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const MainNavigationScreen(),
+      home: home,
     );
   }
 }

@@ -43,7 +43,7 @@ RESERVÁ CUANDO QUIERAS
 Desde cada parada podés buscar alojamiento, pasajes de tren o bus y entradas a atracciones en sitios de reserva conocidos.
 
 PRIVACIDAD
-No necesitás crear una cuenta. Tus viajes guardados quedan en tu teléfono.
+Entrá con tu cuenta de Google o con tu email: tus viajes quedan guardados en tu cuenta y solo vos los ves. Podés eliminar tu cuenta y tus datos cuando quieras desde la app.
 
 Los itinerarios, precios y horarios son sugerencias generadas por IA: confirmá siempre la información importante antes de viajar.
 ```
@@ -72,7 +72,7 @@ Falta una captura de **la pantalla del itinerario** mientras se planifica (la de
 ## Formularios de "Contenido de la app"
 
 ### Acceso a la app
-Toda la funcionalidad está disponible sin restricciones (no hay login).
+La app **requiere iniciar sesión**. Marcar "Todas o algunas funciones están restringidas" y dar a Google una cuenta de prueba con email y contraseña (crearla desde la app, por ejemplo `revision.travelplanner@gmail.com`), con la instrucción: "Abrir la app → Iniciar sesión con este email y contraseña". No usar una cuenta real tuya.
 
 ### Anuncios
 La app **no contiene anuncios**. Los botones a GetYourGuide, Booking y Omio son enlaces de afiliado que abre el usuario, no publicidad.
@@ -89,16 +89,20 @@ Edad: **18 años o más** (también se puede marcar desde 13). No elegir menores
 |---|---|
 | ¿Recopila o comparte alguno de los tipos de datos requeridos? | **Sí** |
 | ¿Los datos se encriptan en tránsito? | **Sí** (HTTPS) |
-| ¿El usuario puede pedir que se borren sus datos? | **Sí** (se borran desde la app o desinstalándola) |
+| ¿El usuario puede pedir que se borren sus datos? | **Sí** (desde la app: Mi cuenta → Eliminar cuenta) |
+| URL para pedir la eliminación de la cuenta | `https://pela3.github.io/travel-planner/privacidad/#eliminar-cuenta` |
 
 Tipos de datos a declarar:
 
 | Tipo de dato | ¿Recopilado? | ¿Compartido? | Opcional | Finalidad |
 |---|---|---|---|---|
-| **Actividad en apps → Otro contenido generado por el usuario** (destinos, días y preferencias del viaje) | Sí, efímero (no se guarda asociado al usuario) | Sí, con Google (Gemini) para generar el itinerario | No, la función lo requiere | Funcionalidad de la app |
+| **Información personal → Dirección de correo electrónico** | Sí | No | No (el login es obligatorio) | Funcionalidad de la app, administración de la cuenta |
+| **Información personal → Nombre** | Sí | No | No | Funcionalidad de la app, administración de la cuenta |
+| **Información personal → ID de usuario** (id de Firebase) | Sí | No | No | Funcionalidad de la app, administración de la cuenta |
+| **Actividad en apps → Otro contenido generado por el usuario** (viajes guardados; y destinos, días y preferencias enviados a Gemini) | Sí | Sí, con Google (Gemini) para generar el itinerario | No, la función lo requiere | Funcionalidad de la app |
 | **Información y rendimiento de la app → Registros de fallas / diagnóstico** (logs del servidor con IP) | Sí | No | No | Funcionalidad de la app, prevención de fraude/abuso |
 
-No se declaran: ubicación, información personal (nombre, email), datos financieros, contactos, fotos, identificadores de dispositivo ni historial de navegación. Los viajes guardados no se declaran porque **no salen del dispositivo**.
+No se declaran: ubicación, datos financieros, contactos, fotos, identificadores de dispositivo ni historial de navegación. Firebase (Authentication y Firestore) es un proveedor de servicios: guardar ahí la cuenta y los viajes no cuenta como "compartir".
 
 > Nota: Google considera que procesar datos en un servidor propio y enviarlos a un proveedor (Gemini) para cumplir la función pedida por el usuario es "transferencia a proveedor de servicios", que no cuenta como compartir. Si al completar el formulario la redacción te lleva a esa opción, podés marcar "Compartido: No" para los datos del viaje. Las dos respuestas son defendibles con la política de privacidad publicada.
 

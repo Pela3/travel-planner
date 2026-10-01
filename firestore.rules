@@ -1,0 +1,22 @@
+rules_version = '2';
+
+// Reglas de Firestore de Travel Planner. Se pegan en la consola de Firebase:
+// Firestore Database → Reglas → Publicar.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Cada usuario solo ve y modifica sus propios viajes.
+    match /usuarios/{uid}/viajes/{viajeId} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['json', 'creado'])
+        && request.resource.data.json is string
+        && request.resource.data.json.size() < 500000
+        && request.resource.data.creado is timestamp;
+    }
+
+    // Todo lo demás, cerrado.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

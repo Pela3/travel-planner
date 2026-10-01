@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:frontend/app.dart';
+import 'package:frontend/screens/main_navigation_screen.dart';
 import 'package:frontend/screens/home/home_screen.dart';
 import 'package:frontend/screens/planner/widgets/selector_dias_card.dart';
 
@@ -47,7 +48,7 @@ void main() {
 
   group('Paso 1 del planificador', () {
     Future<void> irAlPaso1(WidgetTester tester) async {
-      await tester.pumpWidget(const TravelPlannerApp());
+      await tester.pumpWidget(const TravelPlannerApp(home: MainNavigationScreen()));
       await tester.tap(find.text('Planificar'));
       await tester.pumpAndSettle();
     }

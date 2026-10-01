@@ -5,7 +5,11 @@ import 'mis_viajes/mis_viajes_screen.dart';
 import 'planner/planner_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  const MainNavigationScreen({super.key});
+  final String? nombreUsuario;
+  final String? fotoUsuario;
+  final VoidCallback? onAbrirCuenta;
+
+  const MainNavigationScreen({super.key, this.nombreUsuario, this.fotoUsuario, this.onAbrirCuenta});
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
@@ -21,6 +25,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     // Lista de pantallas activas
     final List<Widget> pantallas = [
       HomeScreen(
+        nombreUsuario: widget.nombreUsuario,
+        fotoUsuario: widget.fotoUsuario,
+        onAbrirCuenta: widget.onAbrirCuenta,
         onSeleccionarDestino: (ciudad, estilo) {
           setState(() {
             _destinoPreseleccionado = ciudad;

@@ -1,5 +1,15 @@
 import '../models/destino_popular.dart';
 
+/// Categorías del inicio: etiqueta del filtro y estilo del planificador que
+/// se preselecciona al planificar un destino de esa categoría.
+const categoriasDestino = <String, ({String etiqueta, String estilo})>{
+  'cultura': (etiqueta: '🏛️ Cultura', estilo: 'cultural'),
+  'playa': (etiqueta: '🏖️ Playa', estilo: 'playa'),
+  'naturaleza': (etiqueta: '🌲 Naturaleza', estilo: 'aventura'),
+  'gastronomia': (etiqueta: '🍷 Gastronomía', estilo: 'gastronomico'),
+  'nieve': (etiqueta: '❄️ Nieve', estilo: 'aventura'),
+};
+
 const List<DestinoPopular> destinosPopulares = [
   DestinoPopular(
     ciudad: 'Roma',

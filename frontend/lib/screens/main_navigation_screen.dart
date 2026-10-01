@@ -14,21 +14,24 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _indiceActual = 0;
   String? _destinoPreseleccionado;
+  String? _estiloPreseleccionado;
 
   @override
   Widget build(BuildContext context) {
     // Lista de pantallas activas
     final List<Widget> pantallas = [
       HomeScreen(
-        onSeleccionarDestino: (ciudad) {
+        onSeleccionarDestino: (ciudad, estilo) {
           setState(() {
             _destinoPreseleccionado = ciudad;
+            _estiloPreseleccionado = estilo;
             _indiceActual = 1; // Cambia a la pestaña "Planificar" (índice 1)
           });
         },
       ),
       PlannerScreen(
         destinoInicial: _destinoPreseleccionado,
+        estiloInicial: _estiloPreseleccionado,
       ),
       const MisViajesScreen(),
     ];

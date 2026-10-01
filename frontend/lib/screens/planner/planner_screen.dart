@@ -17,8 +17,9 @@ import 'widgets/planner_header.dart';
 
 class PlannerScreen extends StatefulWidget {
   final String? destinoInicial;
+  final String? estiloInicial;
 
-  const PlannerScreen({super.key, this.destinoInicial});
+  const PlannerScreen({super.key, this.destinoInicial, this.estiloInicial});
 
   @override
   State<PlannerScreen> createState() => _PlannerScreenState();
@@ -54,14 +55,17 @@ class _PlannerScreenState extends State<PlannerScreen> {
     if (widget.destinoInicial != null && widget.destinoInicial!.isNotEmpty) {
       _destinoController.text = widget.destinoInicial!;
     }
+    if (widget.estiloInicial != null) _estiloSeleccionado = widget.estiloInicial!;
   }
 
   @override
   void didUpdateWidget(covariant PlannerScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.destinoInicial != null && widget.destinoInicial != oldWidget.destinoInicial) {
+    if (widget.destinoInicial != null &&
+        (widget.destinoInicial != oldWidget.destinoInicial || widget.estiloInicial != oldWidget.estiloInicial)) {
       setState(() {
         _destinoController.text = widget.destinoInicial!;
+        if (widget.estiloInicial != null) _estiloSeleccionado = widget.estiloInicial!;
       });
     }
   }
@@ -84,15 +88,71 @@ class _PlannerScreenState extends State<PlannerScreen> {
   int get _costoAcumuladoItinerario =>
       _itinerario.fold(0, (acc, p) => acc + p.costoTotalParada);
 
-  void _iniciarGeneracion() async {
-    final origen = _origenController.text.trim();
-    final destino = _destinoController.text.trim();
-    final dias = int.tryParse(_diasTotalesController.text.trim()) ?? 10;
+  /// Valida los datos del paso 1. Devuelve el mensaje de error o null.
+  String? _validarDatosViaje() {
+    if (_destinoController.text.trim().isEmpty) return 'Ingresá un destino.';
+    if (_origenController.text.trim().isEmpty) return 'Ingresá tu ciudad de partida.';
+    final dias = int.tryParse(_diasTotalesController.text.trim());
+    if (dias == null || dias < 1 || dias > maxDiasViaje) {
+      return 'Los días totales tienen que estar entre 1 y $maxDiasViaje.';
+    }
+    return null;
+  }
 
-    if (origen.isEmpty || destino.isEmpty) {
-      setState(() => _error = 'Ingresá origen y destino.');
+  /// Vuelve al paso 1. Si hay un viaje a medio armar, pide confirmación
+  /// (antes un toque sin querer en "refrescar" perdía todas las paradas).
+  Future<void> _reiniciar() async {
+    final hayViajeEnCurso = _itinerario.isNotEmpty || _paradaActualData != null;
+    if (hayViajeEnCurso && _diasRestantes > 0) {
+      final confirmado = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: const Color(0xFF131D31),
+          title: const Text('¿Empezar un viaje nuevo?', style: TextStyle(color: Colors.white)),
+          content: const Text(
+            'Vas a perder las paradas que armaste de este viaje, porque todavía no está terminado ni guardado.',
+            style: TextStyle(color: Color(0xFF94A3B8)),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Seguir con este viaje')),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Empezar de nuevo', style: TextStyle(color: Color(0xFFEF4444))),
+            ),
+          ],
+        ),
+      );
+      if (confirmado != true || !mounted) return;
+    }
+    setState(() {
+      _itinerario.clear();
+      _paradaActualData = null;
+      _error = null;
+      _pasoActual = 1;
+    });
+  }
+
+  void _irAlPaso2() {
+    final error = _validarDatosViaje();
+    setState(() {
+      _error = error;
+      if (error == null) _pasoActual = 2;
+    });
+  }
+
+  void _iniciarGeneracion() async {
+    // Por si los datos cambiaron después del paso 1: el error se ve en el paso 1.
+    final errorDatos = _validarDatosViaje();
+    if (errorDatos != null) {
+      setState(() {
+        _error = errorDatos;
+        _pasoActual = 1;
+      });
       return;
     }
+    final origen = _origenController.text.trim();
+    final destino = _destinoController.text.trim();
+    final dias = int.parse(_diasTotalesController.text.trim());
 
     setState(() {
       _diasTotales = dias;
@@ -295,7 +355,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
             PlannerHeader(
               pasoActual: _pasoActual,
               onVolver: () => setState(() => _pasoActual--),
-              onReiniciar: () => setState(() => _pasoActual = 1),
+              onReiniciar: _reiniciar,
             ),
             const SizedBox(height: 4),
 
@@ -353,7 +413,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
           fechaSalida: _fechaSalida,
           error: _error,
           onFechaSeleccionada: (fecha) => setState(() => _fechaSalida = fecha),
-          onSiguiente: () => setState(() => _pasoActual = 2),
+          onSiguiente: _irAlPaso2,
         );
     }
   }

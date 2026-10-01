@@ -5,7 +5,8 @@ import 'widgets/categoria_chip.dart';
 import 'widgets/destino_card.dart';
 
 class HomeScreen extends StatefulWidget {
-  final Function(String destinoPreseleccionado)? onSeleccionarDestino;
+  /// Recibe la ciudad elegida y el estilo de viaje que corresponde a su categoría.
+  final void Function(String ciudad, String estilo)? onSeleccionarDestino;
   const HomeScreen({super.key, this.onSeleccionarDestino});
 
   @override
@@ -50,11 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     _buildCategoriaChip('todos', '🌟 Todos'),
-                    _buildCategoriaChip('cultura', '🏛️ Cultura'),
-                    _buildCategoriaChip('playa', '🏖️ Playa'),
-                    _buildCategoriaChip('naturaleza', '🌲 Naturaleza'),
-                    _buildCategoriaChip('gastronomia', '🍷 Gastronomía'),
-                    _buildCategoriaChip('nieve', '❄️ Nieve'),
+                    // Solo las categorías que tienen destinos: antes "Naturaleza"
+                    // aparecía y no mostraba nada.
+                    for (final MapEntry(key: id, value: cat) in categoriasDestino.entries)
+                      if (destinosPopulares.any((d) => d.categoria == id)) _buildCategoriaChip(id, cat.etiqueta),
                   ],
                 ),
               ),
@@ -86,7 +86,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   final destino = destinosFiltrados[index];
                   return DestinoCard(
                     destino: destino,
-                    onPlanificar: () => widget.onSeleccionarDestino?.call(destino.ciudad),
+                    onPlanificar: () => widget.onSeleccionarDestino?.call(
+                      destino.ciudad,
+                      categoriasDestino[destino.categoria]?.estilo ?? 'cultural',
+                    ),
                   );
                 },
               ),

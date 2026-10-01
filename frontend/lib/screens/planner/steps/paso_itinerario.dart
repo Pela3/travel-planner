@@ -65,6 +65,7 @@ class PasoItinerario extends StatelessWidget {
     }
 
     final String ciudadNombre = paradaActual?['ciudad_actual'] ?? (itinerario.isNotEmpty ? itinerario.last.ciudad : 'Destino');
+    final costoParada = _costoParadaActual();
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -76,7 +77,9 @@ class PasoItinerario extends StatelessWidget {
             ciudad: ciudadNombre,
             diasUsados: diasTotales - diasRestantes,
             diasTotales: diasTotales,
-            costoAcumulado: costoAcumulado,
+            // Paradas confirmadas + la que se está viendo con los días elegidos
+            // (antes mostraba "~USD 0" hasta confirmar la primera).
+            costoAcumulado: costoAcumulado + costoParada,
             onExportarPdf: diasRestantes <= 0 ? onExportarPdf : null,
           ),
 
@@ -97,6 +100,13 @@ class PasoItinerario extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Costo estimado de la parada en revisión según los días elegidos.
+  int _costoParadaActual() {
+    final presupuesto = paradaActual?['presupuesto'] as Map<String, dynamic>?;
+    final porDia = presupuesto?['total_diario'] as int? ?? 0;
+    return porDia * diasSeleccionados;
   }
 
   List<Widget> _buildDetalleParada(Map<String, dynamic> parada, String ciudadNombre) {
@@ -126,6 +136,7 @@ class PasoItinerario extends StatelessWidget {
         diasRecomendados: diasRecomendadosIA,
         diasSeleccionados: diasSeleccionados,
         diasRestantes: diasRestantes,
+        costoParada: _costoParadaActual(),
         onChanged: onDiasSeleccionadosChanged,
       ),
       const SizedBox(height: 24),

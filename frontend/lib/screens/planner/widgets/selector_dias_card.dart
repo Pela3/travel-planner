@@ -7,12 +7,16 @@ class SelectorDiasCard extends StatelessWidget {
   final int diasRestantes;
   final ValueChanged<int> onChanged;
 
+  /// Costo estimado de esta parada con los días elegidos (0 = desconocido).
+  final int costoParada;
+
   const SelectorDiasCard({
     super.key,
     required this.diasRecomendados,
     required this.diasSeleccionados,
     required this.diasRestantes,
     required this.onChanged,
+    this.costoParada = 0,
   });
 
   bool get _puedeQuedarseTodo => diasRestantes > 1 && diasSeleccionados < diasRestantes;
@@ -78,6 +82,11 @@ class SelectorDiasCard extends StatelessWidget {
               ),
             ],
           ),
+          if (costoParada > 0)
+            Text(
+              'Costo estimado de esta parada: ~USD $costoParada',
+              style: const TextStyle(color: Color(0xFF38BDF8), fontSize: 12, fontWeight: FontWeight.w600),
+            ),
           // Estadía completa: asigna todos los días que quedan a esta ciudad.
           if (_puedeQuedarseTodo)
             Align(

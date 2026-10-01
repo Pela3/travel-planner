@@ -7,12 +7,14 @@ type PlanRequest struct {
 	DiasRestantes int    `json:"dias_restantes" binding:"required"`
 	EstiloViaje   string `json:"estilo_viaje"` // "economico", "cultural", "relax"
 	MesViaje      string `json:"mes_viaje"`    // ej: "Octubre"
+	Compania      string `json:"compania"`     // "solo", "pareja", "familia", "amigos"
 }
 
 type InfoTraslado struct {
 	MedioSugerido    string `json:"medio_sugerido"`    // "Avión", "Tren de alta velocidad", "Bus", etc.
 	DuracionEstimada string `json:"duracion_estimada"` // ej: "1h 45m" o "12h vuelo"
 	ConsejoLogistica string `json:"consejo_logistica"` // ej: "Ir con 2h de anticipación a la estación"
+	CostoEstimado    int    `json:"costo_estimado"`    // USD aproximados por persona
 }
 
 type ProximaParada struct {
@@ -61,6 +63,8 @@ type PlanResponse struct {
 	Atracciones      []AtraccionDetallada `json:"atracciones"`
 	CronogramaDias   []ActividadDia       `json:"cronograma_dias"`
 	ProximasParadas  []ProximaParada      `json:"proximas_paradas"`
+	// EsFallback indica que la IA no respondió y el plan es genérico (no se cachea).
+	EsFallback bool `json:"es_fallback"`
 }
 
 type ExtenderCronogramaRequest struct {

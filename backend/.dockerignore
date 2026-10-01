@@ -1,0 +1,6 @@
+.env
+*.exe
+cache.json
+bin/
+Dockerfile
+.dockerignore

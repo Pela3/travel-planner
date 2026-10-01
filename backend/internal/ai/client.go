@@ -14,7 +14,13 @@ import (
 	"google.golang.org/genai"
 )
 
-const cacheFilePath = "cache.json"
+// rutaCache devuelve dónde guardar la caché en disco (CACHE_FILE o cache.json).
+func rutaCache() string {
+	if p := strings.TrimSpace(os.Getenv("CACHE_FILE")); p != "" {
+		return p
+	}
+	return "cache.json"
+}
 
 type AIClient struct {
 	clients   []*genai.Client
@@ -75,7 +81,7 @@ func (a *AIClient) cargarCacheDisco() {
 	a.cacheMu.Lock()
 	defer a.cacheMu.Unlock()
 
-	data, err := os.ReadFile(cacheFilePath)
+	data, err := os.ReadFile(rutaCache())
 	if err != nil {
 		if os.IsNotExist(err) {
 			log.Println("Archivo cache.json no encontrado; se inicializará uno nuevo al consultar.")
@@ -105,7 +111,7 @@ func (a *AIClient) guardarEnCache(key string, plan models.PlanResponse) {
 		return
 	}
 
-	if err := os.WriteFile(cacheFilePath, bytes, 0644); err != nil {
+	if err := os.WriteFile(rutaCache(), bytes, 0644); err != nil {
 		log.Printf("Error al escribir cache.json: %v", err)
 	}
 }

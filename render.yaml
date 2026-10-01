@@ -1,0 +1,23 @@
+# Blueprint de Render: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: travel-planner-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    region: oregon
+    branch: main
+    autoDeploy: true
+    healthCheckPath: /health
+    envVars:
+      # Se carga a mano en el dashboard de Render (nunca en el repo).
+      - key: GEMINI_API_KEYS
+        sync: false
+      - key: GIN_MODE
+        value: release
+      - key: RATE_LIMIT_POR_MINUTO
+        value: "10"
+      - key: RATE_LIMIT_GLOBAL_POR_MINUTO
+        value: "60"

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../models/models.dart';
@@ -136,8 +138,11 @@ class _PlannerScreenState extends State<PlannerScreen> {
       }
     } on ApiException catch (e) {
       _mostrarErrorConsulta(e.toString());
+    } on TimeoutException {
+      _mostrarErrorConsulta('El servidor tardó demasiado en responder. Intentá de nuevo.');
     } catch (e) {
-      _mostrarErrorConsulta('Fallo de conexión: $e');
+      debugPrint('Error consultando destino: $e');
+      _mostrarErrorConsulta('No pudimos conectarnos con el servidor. Revisá tu conexión.');
     }
   }
 

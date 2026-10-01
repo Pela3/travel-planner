@@ -11,8 +11,15 @@ class ApiException implements Exception {
   ApiException(this.statusCode);
 
   @override
-  String toString() => 'Error del servidor: $statusCode';
+  String toString() {
+    if (statusCode == 429) return 'Demasiadas solicitudes. Esperá un minuto e intentá de nuevo.';
+    return 'Error del servidor: $statusCode';
+  }
 }
+
+// Generoso a propósito: en el plan gratuito de Render el primer pedido tras un
+// rato sin uso "despierta" el servidor y puede tardar cerca de un minuto.
+const _timeout = Duration(seconds: 90);
 
 class TravelApi {
   static Future<Map<String, dynamic>> planificar({
@@ -36,7 +43,7 @@ class TravelApi {
         'mes_viaje': mes,
         'compania': compania,
       }),
-    );
+    ).timeout(_timeout);
 
     if (response.statusCode != 200) throw ApiException(response.statusCode);
     return jsonDecode(response.body) as Map<String, dynamic>;
@@ -59,7 +66,7 @@ class TravelApi {
         'dias_adicionales': diasAdicionales,
         'lugares_ya_vistos': lugaresYaVistos,
       }),
-    );
+    ).timeout(_timeout);
 
     if (response.statusCode != 200) throw ApiException(response.statusCode);
     final data = jsonDecode(response.body);

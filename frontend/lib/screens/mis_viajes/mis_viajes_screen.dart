@@ -16,7 +16,7 @@ class MisViajesScreen extends StatefulWidget {
 class _MisViajesScreenState extends State<MisViajesScreen> {
   List<ViajeGuardado> _viajes = [];
   bool _cargando = true;
-  String _filtroSeleccionado = 'todos'; // todos, pasados, favoritos
+  String _filtroSeleccionado = 'todos'; // todos, proximos, pasados
 
   @override
   void initState() {
@@ -34,9 +34,49 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
     });
   }
 
-  Future<void> _eliminarViaje(String id) async {
-    await ViajesStorage.eliminar(id);
+  Future<void> _eliminarViaje(ViajeGuardado viaje) async {
+    final confirmado = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF131D31),
+        title: const Text('¿Eliminar viaje?', style: TextStyle(color: Colors.white)),
+        content: Text(
+          'Se va a borrar "${viaje.titulo}". Esta acción no se puede deshacer.',
+          style: const TextStyle(color: Color(0xFF94A3B8)),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancelar')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Eliminar', style: TextStyle(color: Color(0xFFEF4444))),
+          ),
+        ],
+      ),
+    );
+    if (confirmado != true) return;
+
+    await ViajesStorage.eliminar(viaje.id);
     _cargarViajes();
+  }
+
+  /// El viaje que sale antes entre los que todavía no terminaron.
+  ViajeGuardado? get _proximoViaje {
+    final ahora = DateTime.now();
+    final futuros = _viajes.where((v) => !v.esPasado(ahora)).toList()
+      ..sort((a, b) => a.fechaInicio.compareTo(b.fechaInicio));
+    return futuros.isEmpty ? null : futuros.first;
+  }
+
+  List<ViajeGuardado> get _viajesFiltrados {
+    final ahora = DateTime.now();
+    switch (_filtroSeleccionado) {
+      case 'proximos':
+        return _viajes.where((v) => !v.esPasado(ahora)).toList();
+      case 'pasados':
+        return _viajes.where((v) => v.esPasado(ahora)).toList();
+      default:
+        return _viajes;
+    }
   }
 
   @override
@@ -149,7 +189,8 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
   }
 
   Widget _buildLista() {
-    final proximoViaje = _viajes.first;
+    final proximoViaje = _proximoViaje;
+    final viajesFiltrados = _viajesFiltrados;
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -158,36 +199,46 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Tarjeta Destacada: Próximo Viaje
-          const Text('Tu próximo viaje', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
-          const SizedBox(height: 12),
-          ProximoViajeCard(viaje: proximoViaje),
-          const SizedBox(height: 24),
+          if (proximoViaje != null) ...[
+            const Text('Tu próximo viaje', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+            const SizedBox(height: 12),
+            ProximoViajeCard(viaje: proximoViaje),
+            const SizedBox(height: 24),
+          ],
 
-          // Filtros (Todos, Pasados, Favoritos)
+          // Filtros (Todos, Próximos, Pasados)
           Row(
             children: [
               _buildFilterChip('todos', 'Todos'),
               const SizedBox(width: 10),
-              _buildFilterChip('pasados', 'Pasados'),
+              _buildFilterChip('proximos', 'Próximos'),
               const SizedBox(width: 10),
-              _buildFilterChip('favoritos', 'Favoritos'),
+              _buildFilterChip('pasados', 'Pasados'),
             ],
           ),
           const SizedBox(height: 20),
 
           // Lista de viajes
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _viajes.length,
-            itemBuilder: (context, index) {
-              final viaje = _viajes[index];
-              return ViajeCard(
-                viaje: viaje,
-                onEliminar: () => _eliminarViaje(viaje.id),
-              );
-            },
-          ),
+          if (viajesFiltrados.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24),
+              child: Center(
+                child: Text('No hay viajes en esta categoría.', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+              ),
+            )
+          else
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: viajesFiltrados.length,
+              itemBuilder: (context, index) {
+                final viaje = viajesFiltrados[index];
+                return ViajeCard(
+                  viaje: viaje,
+                  onEliminar: () => _eliminarViaje(viaje),
+                );
+              },
+            ),
         ],
       ),
     );

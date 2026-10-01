@@ -22,6 +22,7 @@ class TravelApi {
     required int diasRestantes,
     required String estilo,
     required String mes,
+    required String compania,
   }) async {
     final response = await http.post(
       Uri.parse('${AppConfig.baseUrl}/api/v1/planificar'),
@@ -33,6 +34,7 @@ class TravelApi {
         'dias_restantes': diasRestantes,
         'estilo_viaje': estilo,
         'mes_viaje': mes,
+        'compania': compania,
       }),
     );
 

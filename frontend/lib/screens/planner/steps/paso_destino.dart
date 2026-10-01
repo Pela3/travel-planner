@@ -51,8 +51,10 @@ class PasoDestino extends StatelessWidget {
             ),
             child: TextField(
               controller: destinoController,
+              textAlignVertical: TextAlignVertical.center,
               style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 18),
                 hintText: 'Destino, país o ciudad...',
                 hintStyle: TextStyle(color: Color(0xFF64748B)),
                 prefixIcon: Icon(Icons.search, color: Color(0xFF38BDF8)),
@@ -74,9 +76,11 @@ class PasoDestino extends StatelessWidget {
             ),
             child: TextField(
               controller: origenController,
+              textAlignVertical: TextAlignVertical.center,
               style: const TextStyle(color: Colors.white, fontSize: 14),
               decoration: const InputDecoration(
                 labelText: 'Ciudad de partida (Origen)',
+                contentPadding: EdgeInsets.symmetric(vertical: 12),
                 labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 11),
                 prefixIcon: Icon(Icons.home_outlined, color: Color(0xFF38BDF8), size: 20),
                 border: InputBorder.none,
@@ -102,11 +106,13 @@ class PasoDestino extends StatelessWidget {
                   ),
                   child: TextField(
                     controller: diasTotalesController,
+                    textAlignVertical: TextAlignVertical.center,
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(2)],
                     style: const TextStyle(color: Colors.white, fontSize: 14),
                     decoration: const InputDecoration(
                       labelText: 'Días totales',
+                      contentPadding: EdgeInsets.symmetric(vertical: 12),
                       labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 11),
                       prefixIcon: Icon(Icons.date_range_outlined, color: Color(0xFF38BDF8), size: 18),
                       border: InputBorder.none,

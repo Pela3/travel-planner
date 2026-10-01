@@ -1,0 +1,10 @@
+# Genera la pantalla de arranque: dart run flutter_native_splash:create
+flutter_native_splash:
+  color: "#0B111E" # mismo fondo que la app
+  image: branding/splash.png
+
+  android_12:
+    image: branding/splash_android12.png
+    color: "#0B111E"
+
+  web: false

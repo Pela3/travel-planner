@@ -95,17 +95,13 @@ class CronogramaDiario extends StatelessWidget {
 
   // TIMELINE VERTICAL
   Widget _buildTimeline() {
-    final actividadDelDia = cronograma.firstWhere(
-      (c) => (c['dia'] as int? ?? 1) == diaSeleccionado,
-      orElse: () => cronograma.isNotEmpty ? cronograma.first : null,
-    );
-
-    if (actividadDelDia == null) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12),
-        child: Text('Sin actividades detalladas para este día.', style: TextStyle(color: Color(0xFF94A3B8))),
-      );
+    // Por posición y no por el campo "dia": la IA a veces numera mal, y al
+    // confirmar la parada los días se renumeran 1..N en ese mismo orden.
+    final idx = diaSeleccionado - 1;
+    if (idx < 0 || idx >= cronograma.length) {
+      return _buildDiaPendiente();
     }
+    final actividadDelDia = cronograma[idx];
 
     return Column(
       children: [
@@ -126,6 +122,34 @@ class CronogramaDiario extends StatelessWidget {
           isLast: true,
         ),
       ],
+    );
+  }
+
+  // Día elegido más allá de los que precargó la IA: antes se mostraba el
+  // día 1 otra vez y parecía duplicado.
+  Widget _buildDiaPendiente() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF131D31),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF1E293B)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.auto_awesome, color: Color(0xFF38BDF8), size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              cronograma.isEmpty
+                  ? 'Sin actividades detalladas para este día.'
+                  : 'Las actividades del día $diaSeleccionado se generan con IA al confirmar esta parada, sin repetir lugares de los días anteriores.',
+              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12.5, height: 1.4),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Política de privacidad · Travel Planner</title>
+  <meta name="description" content="Política de privacidad de la app Travel Planner.">
+  <style>
+    :root {
+      --bg: #ffffff; --texto: #1e293b; --suave: #475569; --acento: #0369a1; --borde: #e2e8f0; --caja: #f1f5f9;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0b111e; --texto: #e2e8f0; --suave: #94a3b8; --acento: #38bdf8; --borde: #1e293b; --caja: #131d31; }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--texto);
+      font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    main { max-width: 760px; margin: 0 auto; padding: 40px 16px 64px; }
+    h1 { font-size: 1.9rem; line-height: 1.25; margin: 0 0 4px; }
+    h2 { font-size: 1.2rem; margin: 36px 0 8px; color: var(--acento); }
+    p, li { color: var(--texto); }
+    .fecha { color: var(--suave); margin: 0 0 28px; }
+    .resumen { background: var(--caja); border: 1px solid var(--borde); border-radius: 14px; padding: 4px 20px; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: .95rem; }
+    th, td { text-align: left; vertical-align: top; padding: 10px 8px; border-bottom: 1px solid var(--borde); }
+    th { color: var(--suave); font-weight: 600; }
+    a { color: var(--acento); }
+    .tabla { overflow-x: auto; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Política de privacidad de Travel Planner</h1>
+  <p class="fecha">Última actualización: 1 de octubre de 2026</p>
+
+  <p>
+    Travel Planner (la "App") es una aplicación para planificar viajes con ayuda de inteligencia artificial,
+    desarrollada por <strong>[NOMBRE DEL RESPONSABLE]</strong> ("nosotros"). Esta política explica qué datos
+    usa la App, para qué, con quién se comparten y qué control tenés sobre ellos.
+  </p>
+
+  <div class="resumen">
+    <p><strong>En resumen:</strong></p>
+    <ul>
+      <li>No pedimos registro, cuenta, nombre, email, teléfono ni ubicación.</li>
+      <li>Tus viajes guardados quedan <strong>solo en tu dispositivo</strong>.</li>
+      <li>Para armar el itinerario enviamos los datos del viaje (ciudades, días, mes y preferencias) a nuestro
+        servidor, que a su vez los envía a Google Gemini. No enviamos datos que te identifiquen.</li>
+      <li>No usamos publicidad, analítica ni rastreo, y no vendemos datos.</li>
+    </ul>
+  </div>
+
+  <h2>1. Datos que usa la App</h2>
+  <div class="tabla">
+  <table>
+    <tr><th>Dato</th><th>Para qué</th><th>Dónde queda</th></tr>
+    <tr>
+      <td><strong>Datos del viaje</strong>: ciudad de origen, destinos, cantidad de días, mes de salida,
+        estilo de viaje, con quién viajás y las actividades ya planificadas (para no repetirlas).</td>
+      <td>Generar el itinerario, el presupuesto estimado, el clima y las sugerencias.</td>
+      <td>Se envían a nuestro servidor y a Google Gemini (ver punto 2).</td>
+    </tr>
+    <tr>
+      <td><strong>Viajes guardados</strong>: itinerarios, fechas y presupuestos que confirmás.</td>
+      <td>Que puedas consultarlos, incluso sin conexión, y exportarlos en PDF.</td>
+      <td>Solo en el almacenamiento local de tu dispositivo. No los recibimos.</td>
+    </tr>
+    <tr>
+      <td><strong>Dirección IP y datos técnicos del pedido</strong> (fecha y hora, ruta solicitada,
+        resultado).</td>
+      <td>Funcionamiento del servicio, limitar abusos (cantidad de pedidos por minuto) y diagnosticar errores.</td>
+      <td>Registros (logs) de nuestro servidor y del proveedor de hosting.</td>
+    </tr>
+  </table>
+  </div>
+  <p>
+    La App no accede a tu ubicación, contactos, fotos, cámara, micrófono ni identificadores de publicidad.
+    El único permiso que pide es acceso a Internet.
+  </p>
+
+  <h2>2. Con quién se comparten</h2>
+  <ul>
+    <li>
+      <strong>Google Gemini (Google LLC)</strong>: nuestro servidor envía los datos del viaje a la API de Gemini
+      para generar el itinerario. Google trata esos datos según sus
+      <a href="https://ai.google.dev/gemini-api/terms" rel="noopener">Términos de la API de Gemini</a>; en
+      algunos planes puede usarlos para mejorar sus productos. Por eso evitamos enviar cualquier dato personal.
+    </li>
+    <li>
+      <strong>Render (Render Services, Inc.)</strong>: aloja nuestro servidor. Procesa los pedidos y guarda los
+      registros técnicos mencionados.
+    </li>
+    <li>
+      <strong>Unsplash</strong>: las fotos de las ciudades se cargan desde <code>images.unsplash.com</code>, por lo
+      que Unsplash recibe tu dirección IP al mostrarlas.
+    </li>
+    <li>
+      <strong>Sitios de reservas</strong>: si tocás los botones de GetYourGuide, Booking.com u Omio, la App abre
+      ese sitio en tu navegador con la ciudad o atracción como búsqueda. A partir de ahí rige la política de
+      privacidad de cada sitio. Algunos enlaces incluyen un identificador de afiliado, que les permite saber que
+      llegaste desde Travel Planner.
+    </li>
+  </ul>
+  <p>No vendemos ni alquilamos datos, y no los compartimos con fines publicitarios.</p>
+
+  <h2>3. Cuánto tiempo se conservan</h2>
+  <ul>
+    <li><strong>Viajes guardados</strong>: hasta que los elimines desde la App o la desinstales.</li>
+    <li><strong>Itinerarios generados</strong>: nuestro servidor puede guardar temporalmente en caché la respuesta
+      para una combinación de destino y preferencias, sin ningún dato que te identifique, para responder más rápido
+      a pedidos iguales. La caché se borra cada vez que el servidor se reinicia o actualiza.</li>
+    <li><strong>Registros técnicos y direcciones IP</strong>: se conservan por el tiempo que los retiene el
+      proveedor de hosting, normalmente unos pocos días. El control de pedidos por minuto guarda la IP en memoria
+      y la olvida a los 10 minutos sin actividad.</li>
+  </ul>
+
+  <h2>4. Seguridad</h2>
+  <p>
+    La comunicación entre la App y nuestro servidor viaja cifrada (HTTPS). Las claves de acceso a servicios de
+    terceros se guardan en el servidor y nunca en la App.
+  </p>
+
+  <h2>5. Tus derechos y cómo borrar tus datos</h2>
+  <p>
+    Podés borrar cualquier viaje desde "Mis Viajes" o borrar todos los datos de la App desinstalándola. Como no
+    tenemos cuentas ni datos que te identifiquen, no podemos asociar registros técnicos a una persona; igualmente
+    podés escribirnos para consultas o pedidos sobre tus datos, y te responderemos según la legislación aplicable
+    (por ejemplo, la Ley 25.326 de Protección de Datos Personales de Argentina).
+  </p>
+
+  <h2>6. Menores de edad</h2>
+  <p>
+    La App no está dirigida a menores de 13 años y no recopilamos a sabiendas datos de menores.
+  </p>
+
+  <h2>7. Cambios en esta política</h2>
+  <p>
+    Si cambiamos esta política, publicaremos la nueva versión en esta misma página y actualizaremos la fecha de
+    arriba. Si el cambio es importante, también lo avisaremos dentro de la App.
+  </p>
+
+  <h2>8. Contacto</h2>
+  <p>Para cualquier consulta sobre privacidad: <a href="mailto:[EMAIL DE CONTACTO]">[EMAIL DE CONTACTO]</a></p>
+</main>
+</body>
+</html>

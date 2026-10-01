@@ -8,8 +8,9 @@ import '../../../utils/city_images.dart';
 class ViajeCard extends StatelessWidget {
   final ViajeGuardado viaje;
   final VoidCallback onEliminar;
+  final VoidCallback onAbrir;
 
-  const ViajeCard({super.key, required this.viaje, required this.onEliminar});
+  const ViajeCard({super.key, required this.viaje, required this.onEliminar, required this.onAbrir});
 
   @override
   Widget build(BuildContext context) {
@@ -25,88 +26,91 @@ class ViajeCard extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Imagen de portada con gradiente
-            Stack(
-              children: [
-                Image.network(
-                  obtenerImagenCiudad(ciudadPrincipal, ancho: 600),
-                  height: 130,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 130,
-                    color: const Color(0xFF1E293B),
-                    child: const Center(child: Icon(Icons.location_city, color: Color(0xFF38BDF8), size: 36)),
-                  ),
-                ),
-                Container(
-                  height: 130,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.transparent, const Color(0xFF131D31).withValues(alpha: 0.95)],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: _buildMenu(),
-                ),
-                Positioned(
-                  bottom: 12,
-                  left: 16,
-                  right: 16,
-                  child: Text(
-                    viaje.titulo,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-
-            // Datos del viaje
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: InkWell(
+          onTap: onAbrir,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Imagen de portada con gradiente
+              Stack(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${viaje.diasTotales} días • ${viaje.fechaInicio.day}/${viaje.fechaInicio.month}',
-                        style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '$totalActividades actividades sugeridas',
-                        style: const TextStyle(color: Color(0xFF38BDF8), fontSize: 11, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1E293B),
-                      foregroundColor: const Color(0xFF38BDF8),
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  Image.network(
+                    obtenerImagenCiudad(ciudadPrincipal, ancho: 600),
+                    height: 130,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 130,
+                      color: const Color(0xFF1E293B),
+                      child: const Center(child: Icon(Icons.location_city, color: Color(0xFF38BDF8), size: 36)),
                     ),
-                    icon: const Icon(Icons.picture_as_pdf, size: 16),
-                    label: const Text('PDF', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                    onPressed: () => exportarItinerarioPdf(viaje),
+                  ),
+                  Container(
+                    height: 130,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.transparent, const Color(0xFF131D31).withValues(alpha: 0.95)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: _buildMenu(),
+                  ),
+                  Positioned(
+                    bottom: 12,
+                    left: 16,
+                    right: 16,
+                    child: Text(
+                      viaje.titulo,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+
+              // Datos del viaje
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${viaje.diasTotales} días • ${viaje.fechaInicio.day}/${viaje.fechaInicio.month}',
+                          style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '$totalActividades actividades sugeridas',
+                          style: const TextStyle(color: Color(0xFF38BDF8), fontSize: 11, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1E293B),
+                        foregroundColor: const Color(0xFF38BDF8),
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      icon: const Icon(Icons.picture_as_pdf, size: 16),
+                      label: const Text('PDF', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                      onPressed: () => exportarItinerarioPdf(viaje),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

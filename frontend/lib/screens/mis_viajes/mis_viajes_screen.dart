@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../models/viaje_guardado.dart';
 import '../../services/viajes_storage.dart';
+import 'confirmar_eliminar.dart';
+import 'viaje_detalle_screen.dart';
 import 'widgets/filtro_chip.dart';
 import 'widgets/proximo_viaje_card.dart';
 import 'widgets/viaje_card.dart';
@@ -22,6 +24,13 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
   void initState() {
     super.initState();
     _cargarViajes();
+    ViajesStorage.cambios.addListener(_cargarViajes);
+  }
+
+  @override
+  void dispose() {
+    ViajesStorage.cambios.removeListener(_cargarViajes);
+    super.dispose();
   }
 
   Future<void> _cargarViajes() async {
@@ -35,28 +44,16 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
   }
 
   Future<void> _eliminarViaje(ViajeGuardado viaje) async {
-    final confirmado = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF131D31),
-        title: const Text('¿Eliminar viaje?', style: TextStyle(color: Colors.white)),
-        content: Text(
-          'Se va a borrar "${viaje.titulo}". Esta acción no se puede deshacer.',
-          style: const TextStyle(color: Color(0xFF94A3B8)),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancelar')),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Eliminar', style: TextStyle(color: Color(0xFFEF4444))),
-          ),
-        ],
-      ),
-    );
-    if (confirmado != true) return;
+    if (!await confirmarEliminarViaje(context, viaje)) return;
+    await ViajesStorage.eliminar(viaje.id); // recarga vía ViajesStorage.cambios
+  }
 
-    await ViajesStorage.eliminar(viaje.id);
-    _cargarViajes();
+  Future<void> _abrirViaje(ViajeGuardado viaje) async {
+    // Si se elimina desde el detalle, la lista se recarga vía ViajesStorage.cambios.
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => ViajeDetalleScreen(viaje: viaje)),
+    );
   }
 
   /// El viaje que sale antes entre los que todavía no terminaron.
@@ -202,7 +199,7 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
           if (proximoViaje != null) ...[
             const Text('Tu próximo viaje', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
             const SizedBox(height: 12),
-            ProximoViajeCard(viaje: proximoViaje),
+            ProximoViajeCard(viaje: proximoViaje, onAbrir: () => _abrirViaje(proximoViaje)),
             const SizedBox(height: 24),
           ],
 
@@ -236,6 +233,7 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
                 return ViajeCard(
                   viaje: viaje,
                   onEliminar: () => _eliminarViaje(viaje),
+                  onAbrir: () => _abrirViaje(viaje),
                 );
               },
             ),

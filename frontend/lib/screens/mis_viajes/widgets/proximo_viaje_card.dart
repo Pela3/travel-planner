@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/viaje_guardado.dart';
-import '../../../services/pdf_generator.dart';
 import '../../../utils/city_images.dart';
 
 class ProximoViajeCard extends StatelessWidget {
   final ViajeGuardado viaje;
+  final VoidCallback onAbrir;
 
-  const ProximoViajeCard({super.key, required this.viaje});
+  const ProximoViajeCard({super.key, required this.viaje, required this.onAbrir});
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +69,9 @@ class ProximoViajeCard extends StatelessWidget {
                       foregroundColor: const Color(0xFF0B111E),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
-                    icon: const Icon(Icons.picture_as_pdf, size: 18),
-                    label: const Text('Ver / Compartir Itinerario en PDF', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                    onPressed: () => exportarItinerarioPdf(viaje),
+                    icon: const Icon(Icons.map_outlined, size: 18),
+                    label: const Text('Ver itinerario completo', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    onPressed: onAbrir,
                   ),
                 ),
               ],

@@ -242,8 +242,19 @@ class PasoItinerario extends StatelessWidget {
     );
   }
 
-  // Falló la consulta de la siguiente parada: permitir reintentar sin perder el viaje.
+  // Entre paradas: falló la consulta de la siguiente (o se retomó un borrador
+  // guardado mientras cargaba). Se puede reintentar sin perder el viaje.
   List<Widget> _buildErrorSiguienteParada() {
+    if (error == null) {
+      return [
+        const Text(
+          'Tu viaje está guardado hasta acá. Elegí la próxima ciudad para seguir.',
+          style: TextStyle(color: Colors.white70, fontSize: 13, height: 1.35),
+        ),
+        const SizedBox(height: 8),
+        BuscadorCiudadManual(onBuscar: onReintentar),
+      ];
+    }
     return [
       Container(
         padding: const EdgeInsets.all(14),

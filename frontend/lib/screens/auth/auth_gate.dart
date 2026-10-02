@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/auth_service.dart';
+import '../../services/borrador_storage.dart';
 import '../../services/viajes_storage.dart';
 import '../main_navigation_screen.dart';
 import 'cuenta_screen.dart';
@@ -32,6 +33,7 @@ class _AuthGateState extends State<AuthGate> {
     // Los viajes pasan a la cuenta antes de mostrar la app, así Mis Viajes
     // ya carga los del usuario (y los que había en el teléfono).
     if (usuario != null && usuario.uid != _usuario?.uid) await ViajesStorage.usarCuenta(usuario.uid);
+    BorradorStorage.usuario = usuario?.uid;
     if (!mounted) return;
     setState(() {
       _usuario = usuario;

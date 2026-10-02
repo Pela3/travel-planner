@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../models/viaje_guardado.dart';
 import '../../../utils/city_images.dart';
+import '../../../theme/app_colors.dart';
 
 class ProximoViajeCard extends StatelessWidget {
   final ViajeGuardado viaje;
@@ -15,9 +16,9 @@ class ProximoViajeCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFF131D31),
+        color: AppColors.superficie,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.borde),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +42,7 @@ class ProximoViajeCard extends StatelessWidget {
                     Container(
                       width: 8,
                       height: 8,
-                      decoration: const BoxDecoration(color: Color(0xFF10B981), shape: BoxShape.circle),
+                      decoration: const BoxDecoration(color: AppColors.exito, shape: BoxShape.circle),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
@@ -57,16 +58,16 @@ class ProximoViajeCard extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   'Salida: ${viaje.fechaInicio.day}/${viaje.fechaInicio.month} • ${viaje.diasTotales} días • ~USD ${viaje.costoTotalEstimado}',
-                  style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                  style: const TextStyle(color: AppColors.textoSecundario, fontSize: 12),
                 ),
                 const SizedBox(height: 14),
                 SizedBox(
                   width: double.infinity,
-                  height: 44,
+                  height: 48,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF38BDF8),
-                      foregroundColor: const Color(0xFF0B111E),
+                      backgroundColor: AppColors.primario,
+                      foregroundColor: AppColors.fondo,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
                     icon: const Icon(Icons.map_outlined, size: 18),

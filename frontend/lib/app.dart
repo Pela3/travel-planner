@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'screens/auth/auth_gate.dart';
+import 'theme/app_colors.dart';
 
 class TravelPlannerApp extends StatelessWidget {
   /// Pantalla inicial. Los tests pasan la app directa, sin login.
@@ -17,18 +18,18 @@ class TravelPlannerApp extends StatelessWidget {
       darkTheme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF0B111E),
+        scaffoldBackgroundColor: AppColors.fondo,
         colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF38BDF8), // Celeste vibrante para acentos
+          primary: AppColors.primario, // Celeste vibrante para acentos
           secondary: Color(0xFF818CF8),
-          surface: Color(0xFF131D31), // Superficie de cards
+          surface: AppColors.superficie, // Superficie de cards
         ),
         cardTheme: CardThemeData(
-          color: const Color(0xFF131D31),
+          color: AppColors.superficie,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(22),
-            side: const BorderSide(color: Color(0xFF1E293B), width: 1),
+            side: const BorderSide(color: AppColors.borde, width: 1),
           ),
         ),
       ),

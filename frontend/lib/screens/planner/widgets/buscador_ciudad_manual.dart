@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 /// Campo para elegir cualquier ciudad como próxima parada.
 class BuscadorCiudadManual extends StatefulWidget {
@@ -34,16 +35,16 @@ class _BuscadorCiudadManualState extends State<BuscadorCiudadManual> {
       margin: const EdgeInsets.only(top: 8, bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF131D31),
+        color: AppColors.superficie,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.borde),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Row(
             children: [
-              Icon(Icons.edit_location_alt_outlined, color: Color(0xFF38BDF8), size: 18),
+              Icon(Icons.edit_location_alt_outlined, color: AppColors.primario, size: 18),
               SizedBox(width: 8),
               Text(
                 '¿Querés ir a otro destino?',
@@ -58,7 +59,7 @@ class _BuscadorCiudadManualState extends State<BuscadorCiudadManual> {
           const SizedBox(height: 6),
           const Text(
             'Escribí cualquier ciudad y la IA armará la parada allí.',
-            style: TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+            style: TextStyle(color: AppColors.textoSecundario, fontSize: 12),
           ),
           const SizedBox(height: 12),
           Row(
@@ -66,9 +67,9 @@ class _BuscadorCiudadManualState extends State<BuscadorCiudadManual> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0B111E),
+                    color: AppColors.fondo,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFF1E293B)),
+                    border: Border.all(color: AppColors.borde),
                   ),
                   child: TextField(
                     controller: _controller,
@@ -77,8 +78,8 @@ class _BuscadorCiudadManualState extends State<BuscadorCiudadManual> {
                     style: const TextStyle(color: Colors.white, fontSize: 14),
                     decoration: const InputDecoration(
                       hintText: 'Ej: Salzburgo, Viena, Múnich...',
-                      hintStyle: TextStyle(color: Color(0xFF64748B), fontSize: 13),
-                      prefixIcon: Icon(Icons.search, color: Color(0xFF64748B), size: 18),
+                      hintStyle: TextStyle(color: AppColors.textoTenue, fontSize: 13),
+                      prefixIcon: Icon(Icons.search, color: AppColors.textoTenue, size: 18),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                     ),
@@ -89,14 +90,14 @@ class _BuscadorCiudadManualState extends State<BuscadorCiudadManual> {
               const SizedBox(width: 10),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF38BDF8),
-                  foregroundColor: const Color(0xFF0B111E),
+                  backgroundColor: AppColors.primario,
+                  foregroundColor: AppColors.fondo,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 onPressed: () => _enviar(_controller.text),
-                child: const Icon(Icons.arrow_forward, size: 18, color: Color(0xFF0B111E)),
+                child: const Icon(Icons.arrow_forward, size: 18, color: AppColors.fondo),
               ),
             ],
           ),

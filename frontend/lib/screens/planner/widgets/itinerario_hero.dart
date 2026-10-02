@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../utils/city_images.dart';
+import '../../../theme/app_colors.dart';
 
 /// Header con foto de la ciudad, progreso de días y botón de PDF al terminar.
 class ItinerarioHero extends StatelessWidget {
@@ -30,9 +31,9 @@ class ItinerarioHero extends StatelessWidget {
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) => Container(
             height: 220,
-            color: const Color(0xFF1E293B),
+            color: AppColors.borde,
             child: const Center(
-              child: Icon(Icons.location_city, color: Color(0xFF38BDF8), size: 48),
+              child: Icon(Icons.location_city, color: AppColors.primario, size: 48),
             ),
           ),
         ),
@@ -40,7 +41,7 @@ class ItinerarioHero extends StatelessWidget {
           height: 220,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.transparent, const Color(0xFF0B111E).withValues(alpha: 0.95)],
+              colors: [Colors.transparent, AppColors.fondo.withValues(alpha: 0.95)],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -66,15 +67,16 @@ class ItinerarioHero extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       '$diasUsados de $diasTotales días usados • ~USD $costoAcumulado',
-                      style: const TextStyle(color: Color(0xFF38BDF8), fontSize: 13, fontWeight: FontWeight.bold),
+                      style: const TextStyle(color: AppColors.primario, fontSize: 13, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
               if (onExportarPdf != null)
                 IconButton(
-                  style: IconButton.styleFrom(backgroundColor: const Color(0xFF38BDF8)),
-                  icon: const Icon(Icons.picture_as_pdf, color: Color(0xFF0B111E)),
+                  tooltip: 'Exportar PDF',
+                  style: IconButton.styleFrom(backgroundColor: AppColors.primario),
+                  icon: const Icon(Icons.picture_as_pdf, color: AppColors.fondo),
                   onPressed: onExportarPdf,
                 ),
             ],

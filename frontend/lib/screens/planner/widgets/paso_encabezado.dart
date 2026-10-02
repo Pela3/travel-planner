@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 /// Encabezado común de los pasos del asistente ("Paso N de 3" + título).
 class PasoEncabezado extends StatelessWidget {
@@ -23,14 +24,14 @@ class PasoEncabezado extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Paso $paso de 3', style: const TextStyle(color: Color(0xFF38BDF8), fontWeight: FontWeight.bold, fontSize: 12)),
-            Text(etiqueta, style: const TextStyle(color: Color(0xFF64748B), fontSize: 12)),
+            Text('Paso $paso de 3', style: const TextStyle(color: AppColors.primario, fontWeight: FontWeight.bold, fontSize: 12)),
+            Text(etiqueta, style: const TextStyle(color: AppColors.textoTenue, fontSize: 12)),
           ],
         ),
         const SizedBox(height: 12),
         Text(titulo, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
         const SizedBox(height: 6),
-        Text(subtitulo, style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+        Text(subtitulo, style: const TextStyle(color: AppColors.textoSecundario, fontSize: 13)),
         const SizedBox(height: 20),
       ],
     );
@@ -50,8 +51,8 @@ class BotonSiguiente extends StatelessWidget {
       height: 52,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF38BDF8),
-          foregroundColor: const Color(0xFF0B111E),
+          backgroundColor: AppColors.primario,
+          foregroundColor: AppColors.fondo,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
         onPressed: onPressed,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 // 🏨 ALOJAMIENTO SUGERIDO (BOOKING)
 class AlojamientoCard extends StatelessWidget {
@@ -41,7 +42,7 @@ class AlojamientoCard extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     'Hoteles y deptos en $ciudad',
-                    style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+                    style: const TextStyle(color: AppColors.textoSecundario, fontSize: 12),
                   ),
                 ],
               ),
@@ -55,7 +56,7 @@ class AlojamientoCard extends StatelessWidget {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             onPressed: onVerBooking,
-            child: const Text('Ver Booking', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+            child: const Text('Ver Booking', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

@@ -9,6 +9,7 @@ import '../../services/viajes_storage.dart';
 import '../main_navigation_screen.dart';
 import 'cuenta_screen.dart';
 import 'login_screen.dart';
+import '../../theme/app_colors.dart';
 
 /// Muestra el login o la app según haya sesión iniciada.
 class AuthGate extends StatefulWidget {
@@ -35,6 +36,12 @@ class _AuthGateState extends State<AuthGate> {
     if (usuario != null && usuario.uid != _usuario?.uid) await ViajesStorage.usarCuenta(usuario.uid);
     BorradorStorage.usuario = usuario?.uid;
     if (!mounted) return;
+    // Se cerró la sesión (o venció, o se borró la cuenta en otro lado): se
+    // cierran los carteles y pantallas abiertos, que si no quedan encima del
+    // login (pasaba con "¿Retomar tu viaje?").
+    if (usuario == null && _usuario != null) {
+      Navigator.of(context).popUntil((ruta) => ruta.isFirst);
+    }
     setState(() {
       _usuario = usuario;
       _iniciando = false;
@@ -51,7 +58,7 @@ class _AuthGateState extends State<AuthGate> {
   Widget build(BuildContext context) {
     if (_iniciando) {
       return const Scaffold(
-        backgroundColor: Color(0xFF0B111E),
+        backgroundColor: AppColors.fondo,
         body: Center(child: CircularProgressIndicator()),
       );
     }

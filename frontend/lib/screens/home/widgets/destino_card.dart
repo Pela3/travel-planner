@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/destino_popular.dart';
+import '../../../theme/app_colors.dart';
 
 class DestinoCard extends StatelessWidget {
   final DestinoPopular destino;
@@ -13,9 +14,9 @@ class DestinoCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFF131D31),
+        color: AppColors.superficie,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.borde),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
@@ -31,7 +32,7 @@ class DestinoCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   errorBuilder: (c, e, s) => Container(
                     height: 150,
-                    color: const Color(0xFF1E293B),
+                    color: AppColors.borde,
                     child: const Center(child: Icon(Icons.photo, color: Colors.white38)),
                   ),
                 ),
@@ -39,7 +40,7 @@ class DestinoCard extends StatelessWidget {
                   height: 150,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.transparent, const Color(0xFF131D31).withValues(alpha: 0.95)],
+                      colors: [Colors.transparent, AppColors.superficie.withValues(alpha: 0.95)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
@@ -51,13 +52,13 @@ class DestinoCard extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0B111E).withValues(alpha: 0.8),
+                      color: AppColors.fondo.withValues(alpha: 0.8),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFF38BDF8).withValues(alpha: 0.4)),
+                      border: Border.all(color: AppColors.primario.withValues(alpha: 0.4)),
                     ),
                     child: Text(
                       '~USD ${destino.costoEstimado}',
-                      style: const TextStyle(color: Color(0xFF38BDF8), fontWeight: FontWeight.bold, fontSize: 11),
+                      style: const TextStyle(color: AppColors.primario, fontWeight: FontWeight.bold, fontSize: 12),
                     ),
                   ),
                 ),
@@ -74,7 +75,7 @@ class DestinoCard extends StatelessWidget {
                       const SizedBox(width: 6),
                       Text(
                         '• ${destino.pais}',
-                        style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+                        style: const TextStyle(color: AppColors.textoSecundario, fontSize: 14),
                       ),
                     ],
                   ),
@@ -88,16 +89,16 @@ class DestinoCard extends StatelessWidget {
                 children: [
                   Text(
                     destino.descripcion,
-                    style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12.5, height: 1.4),
+                    style: const TextStyle(color: AppColors.textoSecundario, fontSize: 12.5, height: 1.4),
                   ),
                   const SizedBox(height: 14),
                   SizedBox(
                     width: double.infinity,
-                    height: 38,
+                    height: 48,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1E293B),
-                        foregroundColor: const Color(0xFF38BDF8),
+                        backgroundColor: AppColors.borde,
+                        foregroundColor: AppColors.primario,
                         elevation: 0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),

@@ -21,9 +21,9 @@ void main() {
     testWidgets('no muestra filtros de categorías sin destinos', (tester) async {
       await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
 
-      expect(find.text('🏛️ Cultura'), findsOneWidget);
+      expect(find.text('Cultura'), findsOneWidget);
       // No hay destinos de naturaleza: el filtro no aparece (antes quedaba vacío).
-      expect(find.text('🌲 Naturaleza'), findsNothing);
+      expect(find.text('Naturaleza'), findsNothing);
     });
 
     testWidgets('al planificar un destino pasa el estilo de su categoría', (tester) async {
@@ -37,7 +37,7 @@ void main() {
       ));
 
       // París es un destino de gastronomía.
-      await tocar(tester, find.text('🍷 Gastronomía'));
+      await tocar(tester, find.text('Gastronomía'));
       await tester.pump();
       await tocar(tester, find.text('Planificar viaje a París'));
 

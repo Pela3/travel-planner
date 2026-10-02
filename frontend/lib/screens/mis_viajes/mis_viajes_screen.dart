@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../models/viaje_guardado.dart';
 import '../../services/viajes_storage.dart';
+import '../../widgets/chip_seleccion.dart';
 import 'confirmar_eliminar.dart';
 import 'viaje_detalle_screen.dart';
-import 'widgets/filtro_chip.dart';
 import 'widgets/proximo_viaje_card.dart';
 import 'widgets/viaje_card.dart';
+import '../../theme/app_colors.dart';
+import '../../widgets/tocable.dart';
 
 class MisViajesScreen extends StatefulWidget {
   const MisViajesScreen({super.key});
@@ -89,7 +91,7 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0B111E),
+      backgroundColor: AppColors.fondo,
       body: SafeArea(
         child: Column(
           children: [
@@ -99,7 +101,7 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
             // Contenido expandido
             Expanded(
               child: _cargando
-                  ? const Center(child: CircularProgressIndicator(color: Color(0xFF38BDF8), strokeWidth: 3))
+                  ? const Center(child: CircularProgressIndicator(color: AppColors.primario, strokeWidth: 3))
                   : _viajes.isEmpty
                       ? _buildVacio()
                       : _buildLista(),
@@ -117,43 +119,49 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Mis Aventuras',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+          // Expanded: en pantallas de 360 de ancho el título no entraba.
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Mis Aventuras',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
                 ),
-              ),
-              SizedBox(height: 2),
-              Text(
-                'Historial e itinerarios guardados',
-                style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
-              ),
-            ],
+                SizedBox(height: 2),
+                Text(
+                  'Historial e itinerarios guardados',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: AppColors.textoSecundario, fontSize: 12),
+                ),
+              ],
+            ),
           ),
+          const SizedBox(width: 12),
           Row(
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF131D31),
+                  color: AppColors.superficie,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF1E293B)),
+                  border: Border.all(color: AppColors.borde),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.bookmark_added_outlined, color: Color(0xFF38BDF8), size: 14),
+                    const Icon(Icons.bookmark_added_outlined, color: AppColors.primario, size: 14),
                     const SizedBox(width: 5),
                     Text(
                       '${_viajes.length} ${_viajes.length == 1 ? "viaje" : "viajes"}',
                       style: const TextStyle(
-                        color: Color(0xFF38BDF8),
-                        fontSize: 11,
+                        color: AppColors.primario,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -161,16 +169,19 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
                 ),
               ),
               const SizedBox(width: 8),
-              GestureDetector(
+              Tocable(
                 onTap: _cargarViajes,
+                etiqueta: 'Actualizar viajes',
+                borderRadius: BorderRadius.circular(12),
                 child: Container(
-                  padding: const EdgeInsets.all(7),
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF131D31),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: const Color(0xFF1E293B)),
+                    color: AppColors.superficie,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.borde),
                   ),
-                  child: const Icon(Icons.refresh, color: Colors.white70, size: 18),
+                  child: const Icon(Icons.refresh, color: Colors.white70, size: 20),
                 ),
               ),
             ],
@@ -189,7 +200,7 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
           SizedBox(height: 14),
           Text('No tenés viajes guardados todavía', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
           SizedBox(height: 6),
-          Text('Planificá tu primera aventura con IA.', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+          Text('Planificá tu primera aventura con IA.', style: TextStyle(color: AppColors.textoSecundario, fontSize: 13)),
         ],
       ),
     );
@@ -230,7 +241,7 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 24),
               child: Center(
-                child: Text('No hay viajes en esta categoría.', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+                child: Text('No hay viajes en esta categoría.', style: TextStyle(color: AppColors.textoSecundario, fontSize: 13)),
               ),
             )
           else
@@ -253,7 +264,7 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
   }
 
   Widget _buildFilterChip(String id, String label) {
-    return FiltroChip(
+    return ChipSeleccion(
       label: label,
       seleccionado: _filtroSeleccionado == id,
       onTap: () => setState(() => _filtroSeleccionado = id),

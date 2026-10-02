@@ -1,13 +1,15 @@
+import 'package:flutter/material.dart';
+
 import '../models/destino_popular.dart';
 
-/// Categorías del inicio: etiqueta del filtro y estilo del planificador que
-/// se preselecciona al planificar un destino de esa categoría.
-const categoriasDestino = <String, ({String etiqueta, String estilo})>{
-  'cultura': (etiqueta: '🏛️ Cultura', estilo: 'cultural'),
-  'playa': (etiqueta: '🏖️ Playa', estilo: 'playa'),
-  'naturaleza': (etiqueta: '🌲 Naturaleza', estilo: 'aventura'),
-  'gastronomia': (etiqueta: '🍷 Gastronomía', estilo: 'gastronomico'),
-  'nieve': (etiqueta: '❄️ Nieve', estilo: 'aventura'),
+/// Categorías del inicio: etiqueta e ícono del filtro, y estilo del
+/// planificador que se preselecciona al planificar un destino de esa categoría.
+const categoriasDestino = <String, ({String etiqueta, IconData icono, String estilo})>{
+  'cultura': (etiqueta: 'Cultura', icono: Icons.account_balance_outlined, estilo: 'cultural'),
+  'playa': (etiqueta: 'Playa', icono: Icons.beach_access_outlined, estilo: 'playa'),
+  'naturaleza': (etiqueta: 'Naturaleza', icono: Icons.forest_outlined, estilo: 'aventura'),
+  'gastronomia': (etiqueta: 'Gastronomía', icono: Icons.restaurant_outlined, estilo: 'gastronomico'),
+  'nieve': (etiqueta: 'Nieve', icono: Icons.ac_unit, estilo: 'aventura'),
 };
 
 const List<DestinoPopular> destinosPopulares = [

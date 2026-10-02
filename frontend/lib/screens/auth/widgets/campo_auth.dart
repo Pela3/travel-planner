@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 /// Campo de texto de las pantallas de cuenta, con el estilo oscuro de la app.
 class CampoAuth extends StatefulWidget {
@@ -54,22 +55,22 @@ class _CampoAuthState extends State<CampoAuth> {
       style: const TextStyle(color: Colors.white, fontSize: 15),
       decoration: InputDecoration(
         labelText: widget.etiqueta,
-        labelStyle: const TextStyle(color: Color(0xFF64748B)),
-        floatingLabelStyle: const TextStyle(color: Color(0xFF38BDF8)),
-        prefixIcon: Icon(widget.icono, color: const Color(0xFF38BDF8), size: 20),
+        labelStyle: const TextStyle(color: AppColors.textoTenue),
+        floatingLabelStyle: const TextStyle(color: AppColors.primario),
+        prefixIcon: Icon(widget.icono, color: AppColors.primario, size: 20),
         suffixIcon: widget.esContrasena
             ? IconButton(
                 tooltip: _oculta ? 'Mostrar contraseña' : 'Ocultar contraseña',
                 icon: Icon(_oculta ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                    color: const Color(0xFF64748B), size: 20),
+                    color: AppColors.textoTenue, size: 20),
                 onPressed: () => setState(() => _oculta = !_oculta),
               )
             : null,
         filled: true,
-        fillColor: const Color(0xFF131D31),
+        fillColor: AppColors.superficie,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-        enabledBorder: _borde(const Color(0xFF1E293B)),
-        focusedBorder: _borde(const Color(0xFF38BDF8)),
+        enabledBorder: _borde(AppColors.borde),
+        focusedBorder: _borde(AppColors.primario),
         errorBorder: _borde(Colors.redAccent),
         focusedErrorBorder: _borde(Colors.redAccent),
       ),

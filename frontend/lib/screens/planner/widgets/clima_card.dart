@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 /// Clima y vestimenta sugerida para la parada.
 class ClimaCard extends StatelessWidget {
@@ -11,13 +12,13 @@ class ClimaCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF131D31),
+        color: AppColors.superficie,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.borde),
       ),
       child: Row(
         children: [
-          const Icon(Icons.wb_sunny_outlined, color: Color(0xFF38BDF8), size: 22),
+          const Icon(Icons.wb_sunny_outlined, color: AppColors.primario, size: 22),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -30,7 +31,7 @@ class ClimaCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   'Ropa: ${(clima['ropa_recomendada'] as List<dynamic>?)?.join(", ") ?? "Cómoda"}',
-                  style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+                  style: const TextStyle(color: AppColors.textoSecundario, fontSize: 12),
                 ),
               ],
             ),

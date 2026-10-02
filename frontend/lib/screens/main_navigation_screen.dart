@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'home/home_screen.dart';
 import 'mis_viajes/mis_viajes_screen.dart';
 import 'planner/planner_screen.dart';
+import '../theme/app_colors.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   final String? nombreUsuario;
@@ -45,29 +46,29 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B111E),
+      backgroundColor: AppColors.fondo,
       body: IndexedStack(
         index: _indiceActual,
         children: pantallas,
       ),
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          indicatorColor: const Color(0xFF38BDF8).withValues(alpha: 0.2),
+          indicatorColor: AppColors.primario.withValues(alpha: 0.2),
           labelTextStyle: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.selected)) {
-              return const TextStyle(color: Color(0xFF38BDF8), fontWeight: FontWeight.bold, fontSize: 12);
+              return const TextStyle(color: AppColors.primario, fontWeight: FontWeight.bold, fontSize: 12);
             }
-            return const TextStyle(color: Color(0xFF64748B), fontSize: 12);
+            return const TextStyle(color: AppColors.textoTenue, fontSize: 12);
           }),
           iconTheme: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.selected)) {
-              return const IconThemeData(color: Color(0xFF38BDF8));
+              return const IconThemeData(color: AppColors.primario);
             }
-            return const IconThemeData(color: Color(0xFF64748B));
+            return const IconThemeData(color: AppColors.textoTenue);
           }),
         ),
         child: NavigationBar(
-          backgroundColor: const Color(0xFF0B111E),
+          backgroundColor: AppColors.fondo,
           selectedIndex: _indiceActual,
           onDestinationSelected: (idx) {
             setState(() {

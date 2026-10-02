@@ -7,6 +7,7 @@ import '../../services/viajes_storage.dart';
 import '../../utils/city_images.dart';
 import 'confirmar_eliminar.dart';
 import 'widgets/parada_detalle.dart';
+import '../../theme/app_colors.dart';
 
 /// Itinerario completo de un viaje guardado. Funciona sin internet: todo sale
 /// de lo guardado en el dispositivo (solo las fotos necesitan conexión).
@@ -28,18 +29,18 @@ class ViajeDetalleScreen extends StatelessWidget {
     final f = viaje.fechaInicio;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B111E),
+      backgroundColor: AppColors.fondo,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
             pinned: true,
             expandedHeight: 220,
-            backgroundColor: const Color(0xFF0B111E),
+            backgroundColor: AppColors.fondo,
             foregroundColor: Colors.white,
             actions: [
               PopupMenuButton<String>(
-                color: const Color(0xFF1E293B),
+                color: AppColors.borde,
                 onSelected: (value) {
                   if (value == 'txt') compartirItinerarioTexto(viaje);
                   if (value == 'delete') _eliminar(context);
@@ -56,8 +57,8 @@ class ViajeDetalleScreen extends StatelessWidget {
                   PopupMenuItem(
                     value: 'delete',
                     child: ListTile(
-                      leading: Icon(Icons.delete_outline, color: Color(0xFFEF4444), size: 20),
-                      title: Text('Eliminar', style: TextStyle(color: Color(0xFFEF4444), fontSize: 13)),
+                      leading: Icon(Icons.delete_outline, color: AppColors.error, size: 20),
+                      title: Text('Eliminar', style: TextStyle(color: AppColors.error, fontSize: 13)),
                       dense: true,
                     ),
                   ),
@@ -80,12 +81,12 @@ class ViajeDetalleScreen extends StatelessWidget {
                     obtenerImagenCiudad(ciudadPrincipal, ancho: 600),
                     fit: BoxFit.cover,
                     // Sin internet queda el fondo liso: el resto de la pantalla sigue andando.
-                    errorBuilder: (context, error, stackTrace) => Container(color: const Color(0xFF1E293B)),
+                    errorBuilder: (context, error, stackTrace) => Container(color: AppColors.borde),
                   ),
                   DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.transparent, const Color(0xFF0B111E).withValues(alpha: 0.95)],
+                        colors: [Colors.transparent, AppColors.fondo.withValues(alpha: 0.95)],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                       ),
@@ -113,11 +114,11 @@ class ViajeDetalleScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
-                  height: 44,
+                  height: 48,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF38BDF8),
-                      foregroundColor: const Color(0xFF0B111E),
+                      backgroundColor: AppColors.primario,
+                      foregroundColor: AppColors.fondo,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     ),
                     icon: const Icon(Icons.picture_as_pdf, size: 18),
@@ -129,7 +130,7 @@ class ViajeDetalleScreen extends StatelessWidget {
                 const Text('Paradas', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                 const SizedBox(height: 12),
                 if (viaje.paradas.isEmpty)
-                  const Text('Este viaje no tiene paradas guardadas.', style: TextStyle(color: Color(0xFF94A3B8)))
+                  const Text('Este viaje no tiene paradas guardadas.', style: TextStyle(color: AppColors.textoSecundario))
                 else
                   for (final (i, parada) in viaje.paradas.indexed)
                     ParadaDetalle(parada: parada, numero: i + 1, expandidaInicialmente: i == 0),
@@ -152,14 +153,14 @@ class _Dato extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFF131D31),
+        color: AppColors.superficie,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.borde),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icono, color: const Color(0xFF38BDF8), size: 14),
+          Icon(icono, color: AppColors.primario, size: 14),
           const SizedBox(width: 6),
           Text(texto, style: const TextStyle(color: Colors.white70, fontSize: 12)),
         ],

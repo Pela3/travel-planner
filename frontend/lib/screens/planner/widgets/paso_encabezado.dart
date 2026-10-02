@@ -40,7 +40,8 @@ class PasoEncabezado extends StatelessWidget {
 
 /// Botón principal "Siguiente →" de los pasos 1 y 2.
 class BotonSiguiente extends StatelessWidget {
-  final VoidCallback onPressed;
+  /// null = desactivado (falta elegir algo).
+  final VoidCallback? onPressed;
 
   const BotonSiguiente({super.key, required this.onPressed});
 
@@ -53,6 +54,8 @@ class BotonSiguiente extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primario,
           foregroundColor: AppColors.fondo,
+          disabledBackgroundColor: AppColors.borde,
+          disabledForegroundColor: AppColors.textoTenue,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
         onPressed: onPressed,
@@ -63,6 +66,24 @@ class BotonSiguiente extends StatelessWidget {
             SizedBox(width: 8),
             Icon(Icons.arrow_forward, size: 16),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Aviso de por qué el botón está desactivado.
+class AvisoElegirOpcion extends StatelessWidget {
+  const AvisoElegirOpcion({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.only(bottom: 10),
+      child: Center(
+        child: Text(
+          'Elegí una opción para seguir',
+          style: TextStyle(color: AppColors.textoTenue, fontSize: 13),
         ),
       ),
     );

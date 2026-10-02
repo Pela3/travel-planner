@@ -44,11 +44,14 @@
   <div class="resumen">
     <p><strong>En resumen:</strong></p>
     <ul>
-      <li>No pedimos registro, cuenta, nombre, email, teléfono ni ubicación.</li>
-      <li>Tus viajes guardados quedan <strong>solo en tu dispositivo</strong>.</li>
+      <li>Para usar la App creás una cuenta con Google o con tu email. Guardamos tu nombre, tu email y tus viajes.</li>
+      <li>Tus viajes se guardan en tu cuenta (Google Firebase) para que los veas en cualquier dispositivo.
+        Solo vos podés verlos.</li>
+      <li>No pedimos teléfono ni ubicación.</li>
       <li>Para armar el itinerario enviamos los datos del viaje (ciudades, días, mes y preferencias) a nuestro
         servidor, que a su vez los envía a Google Gemini. No enviamos datos que te identifiquen.</li>
       <li>No usamos publicidad, analítica ni rastreo, y no vendemos datos.</li>
+      <li>Podés eliminar tu cuenta y todos tus viajes en cualquier momento desde la App (ver punto 5).</li>
     </ul>
   </div>
 
@@ -56,6 +59,12 @@
   <div class="tabla">
   <table>
     <tr><th>Dato</th><th>Para qué</th><th>Dónde queda</th></tr>
+    <tr>
+      <td><strong>Datos de la cuenta</strong>: email, nombre y, si entrás con Google, tu foto de perfil. Si usás
+        email, la contraseña la gestiona Firebase de forma cifrada; nosotros nunca la vemos.</td>
+      <td>Identificarte, que tus viajes sean solo tuyos y recuperar el acceso si olvidás la contraseña.</td>
+      <td>Firebase Authentication (Google).</td>
+    </tr>
     <tr>
       <td><strong>Datos del viaje</strong>: ciudad de origen, destinos, cantidad de días, mes de salida,
         estilo de viaje, con quién viajás y las actividades ya planificadas (para no repetirlas).</td>
@@ -65,7 +74,8 @@
     <tr>
       <td><strong>Viajes guardados</strong>: itinerarios, fechas y presupuestos que confirmás.</td>
       <td>Que puedas consultarlos, incluso sin conexión, y exportarlos en PDF.</td>
-      <td>Solo en el almacenamiento local de tu dispositivo. No los recibimos.</td>
+      <td>En tu cuenta, en Cloud Firestore (Google), y una copia en tu dispositivo para usarlos sin conexión.
+        Solo tu cuenta puede leerlos.</td>
     </tr>
     <tr>
       <td><strong>Dirección IP y datos técnicos del pedido</strong> (fecha y hora, ruta solicitada,
@@ -82,6 +92,11 @@
 
   <h2>2. Con quién se comparten</h2>
   <ul>
+    <li>
+      <strong>Google Firebase (Google LLC)</strong>: gestiona el inicio de sesión (Firebase Authentication) y guarda
+      tus viajes (Cloud Firestore). Google trata esos datos según las
+      <a href="https://firebase.google.com/support/privacy" rel="noopener">condiciones de privacidad de Firebase</a>.
+    </li>
     <li>
       <strong>Google Gemini (Google LLC)</strong>: nuestro servidor envía los datos del viaje a la API de Gemini
       para generar el itinerario. Google trata esos datos según sus
@@ -107,7 +122,9 @@
 
   <h2>3. Cuánto tiempo se conservan</h2>
   <ul>
-    <li><strong>Viajes guardados</strong>: hasta que los elimines desde la App o la desinstales.</li>
+    <li><strong>Cuenta y viajes guardados</strong>: mientras tengas la cuenta. Si eliminás un viaje o la cuenta,
+      se borran de nuestros servidores (las copias de seguridad de Google pueden tardar hasta unos días más en
+      borrarse).</li>
     <li><strong>Itinerarios generados</strong>: nuestro servidor puede guardar temporalmente en caché la respuesta
       para una combinación de destino y preferencias, sin ningún dato que te identifique, para responder más rápido
       a pedidos iguales. La caché se borra cada vez que el servidor se reinicia o actualiza.</li>
@@ -118,16 +135,23 @@
 
   <h2>4. Seguridad</h2>
   <p>
-    La comunicación entre la App y nuestro servidor viaja cifrada (HTTPS). Las claves de acceso a servicios de
+    La comunicación entre la App, nuestro servidor y Firebase viaja cifrada (HTTPS). Las reglas de la base de datos
+    impiden que una cuenta lea o modifique los viajes de otra. Las claves de acceso a servicios de
     terceros se guardan en el servidor y nunca en la App.
   </p>
 
-  <h2>5. Tus derechos y cómo borrar tus datos</h2>
+  <h2 id="eliminar-cuenta">5. Tus derechos y cómo eliminar tu cuenta</h2>
+  <p>Podés borrar cualquier viaje desde "Mis Viajes". Para eliminar tu cuenta y <strong>todos</strong> tus datos:</p>
+  <ol>
+    <li>Abrí la App y tocá tu foto o inicial, arriba a la izquierda en Inicio.</li>
+    <li>Tocá <strong>Eliminar cuenta</strong> y confirmá con tu contraseña o con tu cuenta de Google.</li>
+  </ol>
   <p>
-    Podés borrar cualquier viaje desde "Mis Viajes" o borrar todos los datos de la App desinstalándola. Como no
-    tenemos cuentas ni datos que te identifiquen, no podemos asociar registros técnicos a una persona; igualmente
-    podés escribirnos para consultas o pedidos sobre tus datos, y te responderemos según la legislación aplicable
-    (por ejemplo, la Ley 25.326 de Protección de Datos Personales de Argentina).
+    Se borran tu cuenta, tu nombre, tu email y todos tus viajes. Si ya no tenés la App instalada, escribinos a
+    <a href="mailto:[EMAIL DE CONTACTO]">[EMAIL DE CONTACTO]</a> desde el email de tu cuenta con el asunto
+    "Eliminar cuenta" y la borramos en un plazo de 30 días. También podés pedirnos acceso o corrección de tus
+    datos según la legislación aplicable (por ejemplo, la Ley 25.326 de Protección de Datos Personales de
+    Argentina).
   </p>
 
   <h2>6. Menores de edad</h2>

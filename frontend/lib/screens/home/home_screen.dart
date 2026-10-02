@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 
 import '../../data/destinos_populares.dart';
+import '../auth/cuenta_screen.dart';
 import 'widgets/categoria_chip.dart';
 import 'widgets/destino_card.dart';
 
 class HomeScreen extends StatefulWidget {
   /// Recibe la ciudad elegida y el estilo de viaje que corresponde a su categoría.
   final void Function(String ciudad, String estilo)? onSeleccionarDestino;
-  const HomeScreen({super.key, this.onSeleccionarDestino});
+  final String? nombreUsuario;
+  final String? fotoUsuario;
+  final VoidCallback? onAbrirCuenta;
+
+  const HomeScreen({
+    super.key,
+    this.onSeleccionarDestino,
+    this.nombreUsuario,
+    this.fotoUsuario,
+    this.onAbrirCuenta,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -109,42 +120,40 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHeader() {
+    final nombre = (widget.nombreUsuario ?? '').trim();
+    final primerNombre = nombre.isEmpty ? 'viajero' : nombre.split(' ').first;
     return Row(
       children: [
-        Container(
-          width: 46,
-          height: 46,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: const Color(0xFF38BDF8), width: 1.5),
-            gradient: const LinearGradient(
-              colors: [Color(0xFF0284C7), Color(0xFF38BDF8)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: const Center(
-            child: Icon(Icons.person, color: Colors.white, size: 24),
+        Tooltip(
+          message: 'Mi cuenta',
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: widget.onAbrirCuenta,
+            child: AvatarUsuario(radio: 23, fotoUrl: widget.fotoUsuario, nombre: nombre),
           ),
         ),
         const SizedBox(width: 14),
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '¡Hola, viajero! 👋',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            SizedBox(height: 2),
-            Text(
-              '¿Cuál será tu próxima aventura?',
-              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
-            ),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '¡Hola, $primerNombre! 👋',
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              const SizedBox(height: 2),
+              const Text(
+                '¿Cuál será tu próxima aventura?',
+                style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+              ),
+            ],
+          ),
         ),
       ],
     );
   }
+
 
   Widget _buildBannerCta() {
     return Container(

@@ -35,7 +35,17 @@ class _MisViajesScreenState extends State<MisViajesScreen> {
 
   Future<void> _cargarViajes() async {
     setState(() => _cargando = true);
-    final viajes = await ViajesStorage.cargar();
+    List<ViajeGuardado> viajes;
+    try {
+      viajes = await ViajesStorage.cargar();
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _cargando = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudieron cargar tus viajes. Revisá tu conexión.')),
+      );
+      return;
+    }
     if (!mounted) return;
     setState(() {
       _viajes = viajes;

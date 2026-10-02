@@ -37,7 +37,7 @@ func main() {
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     origenesPermitidos(),
 		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: false,
 		MaxAge:           12 * time.Hour,
@@ -57,7 +57,17 @@ func main() {
 		envInt("RATE_LIMIT_GLOBAL_POR_MINUTO", 60),
 	)
 
-	api := r.Group("/api/v1", limiter.Middleware())
+	// Con FIREBASE_PROJECT_ID, solo usuarios con sesión iniciada en la app pueden
+	// usar la API, y el límite por minuto se cuenta por usuario.
+	var middlewares []gin.HandlerFunc
+	if projectID := strings.TrimSpace(os.Getenv("FIREBASE_PROJECT_ID")); projectID != "" {
+		middlewares = append(middlewares, middleware.NewVerificadorFirebase(projectID).Middleware())
+	} else {
+		log.Println("Aviso: FIREBASE_PROJECT_ID vacío, la API no pide login")
+	}
+	middlewares = append(middlewares, limiter.Middleware())
+
+	api := r.Group("/api/v1", middlewares...)
 	{
 		api.POST("/planificar", travelHandler.PlanificarViaje)
 		api.POST("/extender-cronograma", travelHandler.ExtenderCronograma)

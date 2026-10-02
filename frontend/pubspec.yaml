@@ -41,6 +41,10 @@ dependencies:
   share_plus: ^13.3.0
   path_provider: ^2.1.6
   url_launcher: ^6.3.2
+  firebase_core: ^4.15.0
+  firebase_auth: ^6.7.0
+  cloud_firestore: ^6.10.0
+  google_sign_in: ^7.2.0
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +74,7 @@ flutter:
   assets:
     - assets/fonts/OpenSans-Regular.ttf
     - assets/fonts/OpenSans-Bold.ttf
+    - assets/images/logo.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

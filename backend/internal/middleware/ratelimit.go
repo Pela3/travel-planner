@@ -9,9 +9,10 @@ import (
 	"golang.org/x/time/rate"
 )
 
-// RateLimiter combina un límite por IP con un límite global.
+// RateLimiter combina un límite por usuario (o por IP si el pedido no pasó por
+// el login) con un límite global.
 //
-// El límite por IP frena a un usuario puntual que abusa. El global protege la
+// El límite por usuario frena a alguien puntual que abusa. El global protege la
 // cuota de Gemini aunque alguien rote IPs o falsee X-Forwarded-For (detrás de
 // un proxy la IP del cliente no es 100% confiable).
 type RateLimiter struct {
@@ -74,7 +75,11 @@ func (rl *RateLimiter) olvidarInactivos(now time.Time) {
 
 func (rl *RateLimiter) Middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if rl.porMinutoIP > 0 && !rl.limiterDe(c.ClientIP()).Allow() {
+		clave := c.GetString(ClaveUID)
+		if clave == "" {
+			clave = "ip:" + c.ClientIP()
+		}
+		if rl.porMinutoIP > 0 && !rl.limiterDe(clave).Allow() {
 			rechazar(c)
 			return
 		}

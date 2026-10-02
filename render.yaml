@@ -21,3 +21,6 @@ services:
         value: "10"
       - key: RATE_LIMIT_GLOBAL_POR_MINUTO
         value: "60"
+      # Solo usuarios con sesión iniciada en la app pueden usar la API.
+      - key: FIREBASE_PROJECT_ID
+        value: travel-planner-4712c

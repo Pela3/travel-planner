@@ -45,6 +45,6 @@ void main() {
   test('obtenerImagenCiudad usa foto específica o genérica', () {
     expect(obtenerImagenCiudad('Roma, Italia'), contains('photo-1552832230'));
     expect(obtenerImagenCiudad('Berlín', ancho: 600), allOf(contains('photo-1560969184'), contains('w=600')));
-    expect(obtenerImagenCiudad('Ushuaia'), contains('photo-1488646953014'));
+    expect(obtenerImagenCiudad('Salzburgo'), contains('photo-1488646953014'));
   });
 }

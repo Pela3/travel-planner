@@ -31,6 +31,9 @@ class Tocable extends StatelessWidget {
       label: etiqueta,
       excludeSemantics: etiqueta != null,
       child: Stack(
+        // passthrough: el hijo recibe el tamaño del padre (en la grilla del
+        // paso 2, con el Stack suelto las tarjetas se achicaban al contenido).
+        fit: StackFit.passthrough,
         children: [
           child,
           Positioned.fill(

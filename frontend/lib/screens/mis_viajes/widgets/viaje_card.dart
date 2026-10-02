@@ -35,8 +35,8 @@ class ViajeCard extends StatelessWidget {
               // Imagen de portada con gradiente
               Stack(
                 children: [
-                  Image.network(
-                    obtenerImagenCiudad(ciudadPrincipal, ancho: 600),
+                  Image(
+                    image: proveedorImagen(obtenerImagenCiudad(ciudadPrincipal, ancho: 600)),
                     height: 130,
                     width: double.infinity,
                     fit: BoxFit.cover,

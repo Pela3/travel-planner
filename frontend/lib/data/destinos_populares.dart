@@ -12,6 +12,9 @@ const categoriasDestino = <String, ({String etiqueta, IconData icono, String est
   'nieve': (etiqueta: 'Nieve', icono: Icons.ac_unit, estilo: 'aventura'),
 };
 
+// Fotos de Unsplash (licencia libre, sin crédito obligatorio). Bariloche, Ushuaia
+// y Chamonix son de dominio público (CC0, Wikimedia Commons y Flickr) y van
+// dentro de la app en assets/destinos/.
 const List<DestinoPopular> destinosPopulares = [
   DestinoPopular(
     ciudad: 'Roma',
@@ -76,5 +79,101 @@ const List<DestinoPopular> destinosPopulares = [
     descripcion: 'La arquitectura de Gaudí, playas mediterráneas y tapas en el Barrio Gótico.',
     imagenUrl: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=700&q=80',
     costoEstimado: 1350,
+  ),
+  DestinoPopular(
+    ciudad: 'Santorini',
+    pais: 'Grecia',
+    categoria: 'playa',
+    descripcion: 'Casas blancas sobre acantilados, cúpulas azules y los atardeceres más famosos del Egeo.',
+    imagenUrl: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=700&q=80',
+    costoEstimado: 1700,
+  ),
+  DestinoPopular(
+    ciudad: 'Maldivas',
+    pais: 'Maldivas',
+    categoria: 'playa',
+    descripcion: 'Bungalows sobre el agua, lagunas turquesa y arrecifes para hacer snorkel.',
+    imagenUrl: 'https://images.unsplash.com/photo-1573843981267-be1999ff37cd?auto=format&fit=crop&w=700&q=80',
+    costoEstimado: 2800,
+  ),
+  DestinoPopular(
+    ciudad: 'Lima',
+    pais: 'Perú',
+    categoria: 'gastronomia',
+    descripcion: 'La capital gastronómica de Sudamérica: ceviche, cocina nikkei y mercados frente al Pacífico.',
+    imagenUrl: 'https://images.unsplash.com/photo-1531968455001-5c5272a41129?auto=format&fit=crop&w=700&q=80',
+    costoEstimado: 900,
+  ),
+  DestinoPopular(
+    ciudad: 'Tokio',
+    pais: 'Japón',
+    categoria: 'gastronomia',
+    descripcion: 'Sushi de mercado, ramen a toda hora e izakayas escondidas entre luces de neón.',
+    imagenUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=700&q=80',
+    costoEstimado: 1900,
+  ),
+  DestinoPopular(
+    ciudad: 'Bangkok',
+    pais: 'Tailandia',
+    categoria: 'gastronomia',
+    descripcion: 'La meca de la comida callejera: pad thai, curry y puestos nocturnos en Chinatown.',
+    imagenUrl: 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=700&q=80',
+    costoEstimado: 1000,
+  ),
+  DestinoPopular(
+    ciudad: 'Bariloche',
+    pais: 'Argentina',
+    categoria: 'nieve',
+    descripcion: 'Esquí en el Cerro Catedral, chocolate artesanal y lagos rodeados de bosques andinos.',
+    imagenUrl: 'assets/destinos/bariloche.jpg',
+    costoEstimado: 800,
+  ),
+  DestinoPopular(
+    ciudad: 'Ushuaia',
+    pais: 'Argentina',
+    categoria: 'nieve',
+    descripcion: 'La ciudad del fin del mundo: Canal Beagle, glaciares y esquí frente al mar.',
+    imagenUrl: 'assets/destinos/ushuaia.jpg',
+    costoEstimado: 950,
+  ),
+  DestinoPopular(
+    ciudad: 'Chamonix',
+    pais: 'Francia',
+    categoria: 'nieve',
+    descripcion: 'Al pie del Mont Blanc: pistas legendarias, glaciares y pueblos alpinos.',
+    imagenUrl: 'assets/destinos/chamonix.jpg',
+    costoEstimado: 2000,
+  ),
+  DestinoPopular(
+    ciudad: 'Torres del Paine',
+    pais: 'Chile',
+    categoria: 'naturaleza',
+    descripcion: 'Picos de granito, lagos turquesa y los trekkings más lindos de la Patagonia.',
+    imagenUrl: 'https://images.unsplash.com/photo-1478827387698-1527781a4887?auto=format&fit=crop&w=700&q=80',
+    costoEstimado: 1500,
+  ),
+  DestinoPopular(
+    ciudad: 'Banff',
+    pais: 'Canadá',
+    categoria: 'naturaleza',
+    descripcion: 'Lagos glaciares color esmeralda en el corazón de las Montañas Rocosas.',
+    imagenUrl: 'https://images.unsplash.com/photo-1561134643-668f9057cce4?auto=format&fit=crop&w=700&q=80',
+    costoEstimado: 1900,
+  ),
+  DestinoPopular(
+    ciudad: 'Reikiavik',
+    pais: 'Islandia',
+    categoria: 'naturaleza',
+    descripcion: 'Puerta de entrada a cascadas, volcanes, géiseres y auroras boreales.',
+    imagenUrl: 'https://images.unsplash.com/photo-1476610182048-b716b8518aae?auto=format&fit=crop&w=700&q=80',
+    costoEstimado: 2200,
+  ),
+  DestinoPopular(
+    ciudad: 'Dolomitas',
+    pais: 'Italia',
+    categoria: 'naturaleza',
+    descripcion: 'Lagos alpinos, picos dentados y senderos de montaña en el norte de Italia.',
+    imagenUrl: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=700&q=80',
+    costoEstimado: 1600,
   ),
 ];

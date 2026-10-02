@@ -6,7 +6,8 @@ import '../../../widgets/tocable.dart';
 
 // PASO 3: ¿Con quién viajás?
 class PasoCompania extends StatelessWidget {
-  final String companiaSeleccionada;
+  /// null hasta que el usuario elige.
+  final String? companiaSeleccionada;
   final ValueChanged<String> onCompaniaChanged;
   final VoidCallback onGenerar;
 
@@ -24,19 +25,28 @@ class PasoCompania extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const PasoEncabezado(
-            paso: 3,
-            etiqueta: 'Compañía',
-            titulo: '¿Con quién viajás?',
-            subtitulo: 'Personalizaremos los alojamientos y ritmos.',
+          // Con scroll: en pantallas bajas o con letra grande no entraba.
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const PasoEncabezado(
+                    paso: 3,
+                    etiqueta: 'Compañía',
+                    titulo: '¿Con quién viajás?',
+                    subtitulo: 'Personalizaremos los alojamientos y ritmos.',
+                  ),
+                  _buildTileCompania('solo', 'Solo', 'Viví la experiencia a tu manera', Icons.person_outline),
+                  _buildTileCompania('pareja', 'Pareja', 'Compartí momentos únicos', Icons.favorite_border),
+                  _buildTileCompania('familia', 'Familia', 'Creá recuerdos para siempre', Icons.family_restroom_outlined),
+                  _buildTileCompania('amigos', 'Amigos', 'La mejor compañía siempre', Icons.group_outlined),
+                ],
+              ),
+            ),
           ),
-
-          _buildTileCompania('solo', 'Solo', 'Viví la experiencia a tu manera', Icons.person_outline),
-          _buildTileCompania('pareja', 'Pareja', 'Compartí momentos únicos', Icons.favorite_border),
-          _buildTileCompania('familia', 'Familia', 'Creá recuerdos para siempre', Icons.family_restroom_outlined),
-          _buildTileCompania('amigos', 'Amigos', 'La mejor compañía siempre', Icons.group_outlined),
-
-          const Spacer(),
+          const SizedBox(height: 8),
+          if (companiaSeleccionada == null) const AvisoElegirOpcion(),
 
           SizedBox(
             width: double.infinity,
@@ -45,10 +55,12 @@ class PasoCompania extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primario,
                 foregroundColor: AppColors.fondo,
+                disabledBackgroundColor: AppColors.borde,
+                disabledForegroundColor: AppColors.textoTenue,
                 elevation: 0,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              onPressed: onGenerar,
+              onPressed: companiaSeleccionada == null ? null : onGenerar,
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

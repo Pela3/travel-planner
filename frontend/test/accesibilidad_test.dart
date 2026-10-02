@@ -44,10 +44,16 @@ void main() {
     await tester.pumpAndSettle();
     await cumplePautas(tester);
 
+    await tester.enterText(find.widgetWithText(TextField, 'Ej: Roma, Italia'), 'Roma');
+    await tester.enterText(find.widgetWithText(TextField, 'Ciudad de partida (Origen)'), 'Buenos Aires');
+    await tester.enterText(find.widgetWithText(TextField, 'Días totales'), '10');
+    await tester.ensureVisible(find.text('Siguiente'));
     await tester.tap(find.text('Siguiente'));
     await tester.pumpAndSettle();
-    await cumplePautas(tester);
+    await cumplePautas(tester); // paso 2 sin elegir (botón desactivado)
 
+    await tester.tap(find.text('Cultura'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Siguiente'));
     await tester.pumpAndSettle();
     await cumplePautas(tester);

@@ -34,13 +34,15 @@ class PlannerScreen extends StatefulWidget {
 class _PlannerScreenState extends State<PlannerScreen> {
   int _pasoActual = 1; // 1: Destino, 2: Tipo de viaje, 3: Compañía, 4: Loading, 5: Itinerario
 
-  final _origenController = TextEditingController(text: 'Buenos Aires');
-  final _destinoController = TextEditingController(text: 'Roma');
-  final _diasTotalesController = TextEditingController(text: '10');
+  // Vacíos: el paso 1 muestra ejemplos en gris en vez de datos ya cargados.
+  final _origenController = TextEditingController();
+  final _destinoController = TextEditingController();
+  final _diasTotalesController = TextEditingController();
 
   DateTime _fechaSalida = DateTime.now().add(const Duration(days: 30));
-  String _estiloSeleccionado = 'cultural';
-  String _companiaSeleccionada = 'pareja';
+  // null hasta que el usuario elige (el estilo puede venir del inicio).
+  String? _estiloSeleccionado;
+  String? _companiaSeleccionada;
 
   int _diasTotales = 10;
   int _diasRestantes = 10;
@@ -135,8 +137,8 @@ class _PlannerScreenState extends State<PlannerScreen> {
       origen: _origenController.text.trim(),
       destino: _destinoController.text.trim(),
       fechaSalida: _fechaSalida,
-      estilo: _estiloSeleccionado,
-      compania: _companiaSeleccionada,
+      estilo: _estilo,
+      compania: _companiaSeleccionada!,
       diasTotales: _diasTotales,
       diasRestantes: _diasRestantes,
       diasSeleccionados: _diasSeleccionados,
@@ -164,6 +166,9 @@ class _PlannerScreenState extends State<PlannerScreen> {
     _diasTotalesController.dispose();
     super.dispose();
   }
+
+  /// Desde la generación del itinerario el estilo ya está elegido.
+  String get _estilo => _estiloSeleccionado!;
 
   String get _mesDeFechaSalida => nombreMes(_fechaSalida);
 
@@ -238,6 +243,11 @@ class _PlannerScreenState extends State<PlannerScreen> {
       });
       return;
     }
+    // Los botones de los pasos 2 y 3 no dejan avanzar sin elegir; por las dudas.
+    if (_estiloSeleccionado == null || _companiaSeleccionada == null) {
+      setState(() => _pasoActual = _estiloSeleccionado == null ? 2 : 3);
+      return;
+    }
     final origen = _origenController.text.trim();
     final destino = _destinoController.text.trim();
     final dias = int.parse(_diasTotalesController.text.trim());
@@ -274,9 +284,9 @@ class _PlannerScreenState extends State<PlannerScreen> {
         destino: destino,
         diasTotales: _diasTotales,
         diasRestantes: _diasRestantes,
-        estilo: _estiloSeleccionado,
+        estilo: _estilo,
         mes: _mesDeFechaSalida,
-        compania: _companiaSeleccionada,
+        compania: _companiaSeleccionada!,
       );
       final diasRecomendados = data['dias_recomendados'] as int? ?? 1;
 
@@ -357,7 +367,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
         try {
           return await TravelApi.extenderCronograma(
             ciudad: ciudadActual,
-            estilo: _estiloSeleccionado,
+            estilo: _estilo,
             diaInicio: diaInicio,
             diasAdicionales: diasAdicionales,
             lugaresYaVistos: lugaresYaVistos,
@@ -431,7 +441,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       titulo: '$origen ➔ ${_itinerario.map((p) => p.ciudad).join(' ➔ ')}',
       origenInicial: origen,
-      estilo: _estiloSeleccionado.toUpperCase(),
+      estilo: _estilo.toUpperCase(),
       mes: _mesDeFechaSalida,
       fechaInicio: _fechaSalida,
       diasTotales: _diasTotales,

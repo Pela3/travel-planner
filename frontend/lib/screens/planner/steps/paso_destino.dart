@@ -57,7 +57,7 @@ class PasoDestino extends StatelessWidget {
               style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.symmetric(vertical: 18),
-                hintText: 'Destino, país o ciudad...',
+                hintText: 'Ej: Roma, Italia',
                 hintStyle: TextStyle(color: AppColors.textoTenue),
                 prefixIcon: Icon(Icons.search, color: AppColors.primario),
                 border: InputBorder.none,
@@ -82,6 +82,10 @@ class PasoDestino extends StatelessWidget {
               style: const TextStyle(color: Colors.white, fontSize: 14),
               decoration: const InputDecoration(
                 labelText: 'Ciudad de partida (Origen)',
+                hintText: 'Ej: Buenos Aires',
+                hintStyle: TextStyle(color: AppColors.textoTenue, fontSize: 14),
+                // Siempre arriba: así el ejemplo se ve sin tocar el campo.
+                floatingLabelBehavior: FloatingLabelBehavior.always,
                 contentPadding: EdgeInsets.symmetric(vertical: 12),
                 labelStyle: TextStyle(color: AppColors.textoTenue, fontSize: 12),
                 prefixIcon: Icon(Icons.home_outlined, color: AppColors.primario, size: 20),
@@ -114,6 +118,9 @@ class PasoDestino extends StatelessWidget {
                     style: const TextStyle(color: Colors.white, fontSize: 14),
                     decoration: const InputDecoration(
                       labelText: 'Días totales',
+                      hintText: 'Ej: 10',
+                      hintStyle: TextStyle(color: AppColors.textoTenue, fontSize: 14),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                       contentPadding: EdgeInsets.symmetric(vertical: 12),
                       labelStyle: TextStyle(color: AppColors.textoTenue, fontSize: 12),
                       prefixIcon: Icon(Icons.date_range_outlined, color: AppColors.primario, size: 18),

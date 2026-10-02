@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,7 +48,12 @@ void main() {
 
       await tocar(tester, 'Mis Viajes');
       await tocar(tester, 'Planificar');
+      await tester.enterText(find.widgetWithText(TextField, 'Ej: Roma, Italia'), 'Roma');
+      await tester.enterText(find.widgetWithText(TextField, 'Ciudad de partida (Origen)'), 'Buenos Aires');
+      await tester.enterText(find.widgetWithText(TextField, 'Días totales'), '10');
+      await tester.ensureVisible(find.text('Siguiente'));
       await tocar(tester, 'Siguiente');
+      await tocar(tester, 'Cultura');
       await tocar(tester, 'Siguiente');
     });
 

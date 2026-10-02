@@ -75,6 +75,7 @@ flutter:
     - assets/fonts/OpenSans-Regular.ttf
     - assets/fonts/OpenSans-Bold.ttf
     - assets/images/logo.png
+    - assets/destinos/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

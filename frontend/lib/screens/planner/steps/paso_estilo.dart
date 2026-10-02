@@ -6,7 +6,8 @@ import '../../../widgets/tocable.dart';
 
 // PASO 2: Tipo de Viaje
 class PasoEstilo extends StatelessWidget {
-  final String estiloSeleccionado;
+  /// null hasta que el usuario elige (o viene elegido desde el inicio).
+  final String? estiloSeleccionado;
   final ValueChanged<String> onEstiloChanged;
   final VoidCallback onSiguiente;
 
@@ -48,7 +49,8 @@ class PasoEstilo extends StatelessWidget {
             ),
           ),
 
-          BotonSiguiente(onPressed: onSiguiente),
+          if (estiloSeleccionado == null) const AvisoElegirOpcion(),
+          BotonSiguiente(onPressed: estiloSeleccionado == null ? null : onSiguiente),
         ],
       ),
     );

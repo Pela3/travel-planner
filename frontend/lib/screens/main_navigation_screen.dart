@@ -39,6 +39,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       PlannerScreen(
         destinoInicial: _destinoPreseleccionado,
         estiloInicial: _estiloPreseleccionado,
+        onRetomarBorrador: () => setState(() => _indiceActual = 1),
       ),
       const MisViajesScreen(),
     ];

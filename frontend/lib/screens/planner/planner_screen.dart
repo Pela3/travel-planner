@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../models/models.dart';
+import '../../services/borrador_storage.dart';
 import '../../services/cronograma.dart';
 import '../../services/pdf_generator.dart';
 import '../../services/travel_api.dart';
@@ -19,7 +20,11 @@ class PlannerScreen extends StatefulWidget {
   final String? destinoInicial;
   final String? estiloInicial;
 
-  const PlannerScreen({super.key, this.destinoInicial, this.estiloInicial});
+  /// Se llama si el usuario elige retomar un viaje a medio planificar, para
+  /// mostrar la pestaña del planificador.
+  final VoidCallback? onRetomarBorrador;
+
+  const PlannerScreen({super.key, this.destinoInicial, this.estiloInicial, this.onRetomarBorrador});
 
   @override
   State<PlannerScreen> createState() => _PlannerScreenState();
@@ -56,6 +61,87 @@ class _PlannerScreenState extends State<PlannerScreen> {
       _destinoController.text = widget.destinoInicial!;
     }
     if (widget.estiloInicial != null) _estiloSeleccionado = widget.estiloInicial!;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _ofrecerBorrador());
+  }
+
+  /// Si la app se cerró a mitad de una planificación, pregunta si retomarla.
+  Future<void> _ofrecerBorrador() async {
+    final borrador = await BorradorStorage.cargar();
+    if (borrador == null || !mounted) return;
+
+    final retomar = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF131D31),
+        title: const Text('¿Retomar tu viaje?', style: TextStyle(color: Colors.white)),
+        content: Text(
+          'Cerraste la app a mitad de la planificación de:\n\n'
+          '${borrador.recorrido}\n'
+          '${borrador.diasPlanificados > 0 ? '${borrador.diasPlanificados} de ${borrador.diasTotales} días armados.' : 'Estabas por confirmar la primera parada.'}\n\n'
+          '¿Querés seguir donde lo dejaste?',
+          style: const TextStyle(color: Color(0xFFCBD5E1), height: 1.35),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('No, empezar de cero', style: TextStyle(color: Color(0xFF94A3B8))),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Sí, retomar', style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    if (retomar == true) {
+      _restaurar(borrador);
+      widget.onRetomarBorrador?.call();
+    } else {
+      BorradorStorage.borrar();
+    }
+  }
+
+  void _restaurar(BorradorViaje b) {
+    setState(() {
+      _origenController.text = b.origen;
+      _destinoController.text = b.destino;
+      _diasTotalesController.text = '${b.diasTotales}';
+      _fechaSalida = b.fechaSalida;
+      _estiloSeleccionado = b.estilo;
+      _companiaSeleccionada = b.compania;
+      _diasTotales = b.diasTotales;
+      _diasRestantes = b.diasRestantes;
+      _diasSeleccionados = b.diasSeleccionados;
+      _diaCronogramaSeleccionado = 1;
+      _itinerario
+        ..clear()
+        ..addAll(b.itinerario);
+      _paradaActualData = b.paradaActual;
+      _error = null;
+      _isLoading = false;
+      _pasoActual = 5;
+    });
+  }
+
+  /// Guarda el viaje en curso para poder retomarlo. Solo vale la pena desde
+  /// que hay itinerario (antes es cargar 3 datos) y hasta que se completa.
+  void _guardarBorrador() {
+    final hayAlgo = _itinerario.isNotEmpty || _paradaActualData != null;
+    if (_pasoActual != 5 || !hayAlgo || _diasRestantes <= 0) return;
+    BorradorStorage.guardar(BorradorViaje(
+      origen: _origenController.text.trim(),
+      destino: _destinoController.text.trim(),
+      fechaSalida: _fechaSalida,
+      estilo: _estiloSeleccionado,
+      compania: _companiaSeleccionada,
+      diasTotales: _diasTotales,
+      diasRestantes: _diasRestantes,
+      diasSeleccionados: _diasSeleccionados,
+      itinerario: List.of(_itinerario),
+      paradaActual: _paradaActualData,
+    ));
   }
 
   @override
@@ -124,6 +210,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
       );
       if (confirmado != true || !mounted) return;
     }
+    BorradorStorage.borrar();
     setState(() {
       _itinerario.clear();
       _paradaActualData = null;
@@ -154,6 +241,8 @@ class _PlannerScreenState extends State<PlannerScreen> {
     final destino = _destinoController.text.trim();
     final dias = int.parse(_diasTotalesController.text.trim());
 
+    // Un viaje nuevo reemplaza al borrador anterior.
+    BorradorStorage.borrar();
     setState(() {
       _diasTotales = dias;
       _diasRestantes = dias;
@@ -197,6 +286,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
           _isLoading = false;
           _pasoActual = 5; // Ver itinerario
         });
+        _guardarBorrador();
       }
     } on ApiException catch (e) {
       _mostrarErrorConsulta(e.toString());
@@ -321,6 +411,11 @@ class _PlannerScreenState extends State<PlannerScreen> {
       _diasRestantes -= diasEfectivos;
       _paradaActualData = null;
     });
+    if (_diasRestantes > 0) {
+      _guardarBorrador();
+    } else {
+      BorradorStorage.borrar();
+    }
 
     if (_diasRestantes > 0 && siguienteCiudad != null && siguienteCiudad.isNotEmpty) {
       _continuarHacia(siguienteCiudad);
@@ -397,7 +492,10 @@ class _PlannerScreenState extends State<PlannerScreen> {
           diaCronogramaSeleccionado: _diaCronogramaSeleccionado,
           fechaInicioParada: _fechaInicioParadaActual,
           ciudadOrigenTraslado: _itinerario.isNotEmpty ? _itinerario.last.ciudad : _origenController.text,
-          onDiasSeleccionadosChanged: (dias) => setState(() => _diasSeleccionados = dias),
+          onDiasSeleccionadosChanged: (dias) {
+            setState(() => _diasSeleccionados = dias);
+            _guardarBorrador();
+          },
           onDiaCronogramaChanged: (dia) => setState(() => _diaCronogramaSeleccionado = dia),
           onConfirmar: _confirmarYContinuar,
           error: _error,

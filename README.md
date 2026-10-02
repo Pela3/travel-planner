@@ -77,7 +77,7 @@ El login (Google y email) y los viajes de cada usuario usan Firebase (proyecto `
 2. Para el login con Google, la huella SHA-1 de la clave que firma la app tiene que estar cargada en esa misma pantalla: la de debug, la del keystore de release y la de "Firma de apps de Google Play". Después de agregar una, volver a descargar `google-services.json`.
 3. Las reglas de Firestore están en [`firestore.rules`](firestore.rules): pegarlas en Firestore Database → Reglas → Publicar.
 
-Los viajes se guardan en `usuarios/{uid}/viajes/{id}`. Los tests no usan Firebase: abren la app con `TravelPlannerApp(home: MainNavigationScreen())`.
+Los viajes se guardan en `usuarios/{uid}/viajes/{id}`. El backend, con `FIREBASE_PROJECT_ID` definido (ya está en `render.yaml`), rechaza con 401 los pedidos sin el ID token del usuario y cuenta el límite por minuto por usuario. Los tests no usan Firebase: abren la app con `TravelPlannerApp(home: MainNavigationScreen())`.
 
 ---
 

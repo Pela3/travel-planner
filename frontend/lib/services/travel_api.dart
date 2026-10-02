@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 import '../config.dart';
@@ -13,6 +14,7 @@ class ApiException implements Exception {
   @override
   String toString() {
     if (statusCode == 429) return 'Demasiadas solicitudes. Esperá un minuto e intentá de nuevo.';
+    if (statusCode == 401) return 'Tu sesión venció. Cerrá sesión y volvé a entrar.';
     if (statusCode == 400) return 'Revisá los datos del viaje (destino, origen y días) e intentá de nuevo.';
     return 'Error del servidor: $statusCode';
   }
@@ -21,6 +23,16 @@ class ApiException implements Exception {
 // Generoso a propósito: en el plan gratuito de Render el primer pedido tras un
 // rato sin uso "despierta" el servidor y puede tardar cerca de un minuto.
 const _timeout = Duration(seconds: 90);
+
+/// Encabezados de cada pedido: el backend solo atiende a usuarios con sesión
+/// (ID token de Firebase, que el SDK renueva solo cuando vence).
+Future<Map<String, String>> _encabezados() async {
+  final token = await FirebaseAuth.instance.currentUser?.getIdToken();
+  return {
+    'Content-Type': 'application/json',
+    if (token != null) 'Authorization': 'Bearer $token',
+  };
+}
 
 class TravelApi {
   static Future<Map<String, dynamic>> planificar({
@@ -34,7 +46,7 @@ class TravelApi {
   }) async {
     final response = await http.post(
       Uri.parse('${AppConfig.baseUrl}/api/v1/planificar'),
-      headers: {'Content-Type': 'application/json'},
+      headers: await _encabezados(),
       body: jsonEncode({
         'ciudad_origen': origen,
         'destino': destino,
@@ -59,7 +71,7 @@ class TravelApi {
   }) async {
     final response = await http.post(
       Uri.parse('${AppConfig.baseUrl}/api/v1/extender-cronograma'),
-      headers: {'Content-Type': 'application/json'},
+      headers: await _encabezados(),
       body: jsonEncode({
         'ciudad': ciudad,
         'estilo': estilo,

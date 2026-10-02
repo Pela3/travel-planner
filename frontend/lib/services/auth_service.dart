@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'borrador_storage.dart';
 import 'viajes_storage.dart';
 
 /// Error de login con un mensaje listo para mostrar.
@@ -69,6 +70,7 @@ class AuthService {
       await RepositorioFirestore(user.uid).borrarTodo();
       await user.delete();
     });
+    await BorradorStorage.borrar();
     await cerrarSesion();
   }
 

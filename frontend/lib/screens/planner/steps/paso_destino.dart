@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 
 import '../../../utils/fechas.dart';
 import '../widgets/paso_encabezado.dart';
+import '../../../theme/app_colors.dart';
+import '../../../widgets/tocable.dart';
 
 /// Máximo de días de un viaje (el backend rechaza más).
 const int maxDiasViaje = 60;
@@ -45,9 +47,9 @@ class PasoDestino extends StatelessWidget {
 
           Container(
             decoration: BoxDecoration(
-              color: const Color(0xFF131D31),
+              color: AppColors.superficie,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF1E293B)),
+              border: Border.all(color: AppColors.borde),
             ),
             child: TextField(
               controller: destinoController,
@@ -56,8 +58,8 @@ class PasoDestino extends StatelessWidget {
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.symmetric(vertical: 18),
                 hintText: 'Destino, país o ciudad...',
-                hintStyle: TextStyle(color: Color(0xFF64748B)),
-                prefixIcon: Icon(Icons.search, color: Color(0xFF38BDF8)),
+                hintStyle: TextStyle(color: AppColors.textoTenue),
+                prefixIcon: Icon(Icons.search, color: AppColors.primario),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -70,9 +72,9 @@ class PasoDestino extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
             decoration: BoxDecoration(
-              color: const Color(0xFF131D31),
+              color: AppColors.superficie,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF1E293B)),
+              border: Border.all(color: AppColors.borde),
             ),
             child: TextField(
               controller: origenController,
@@ -81,8 +83,8 @@ class PasoDestino extends StatelessWidget {
               decoration: const InputDecoration(
                 labelText: 'Ciudad de partida (Origen)',
                 contentPadding: EdgeInsets.symmetric(vertical: 12),
-                labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 11),
-                prefixIcon: Icon(Icons.home_outlined, color: Color(0xFF38BDF8), size: 20),
+                labelStyle: TextStyle(color: AppColors.textoTenue, fontSize: 12),
+                prefixIcon: Icon(Icons.home_outlined, color: AppColors.primario, size: 20),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -100,9 +102,9 @@ class PasoDestino extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF131D31),
+                    color: AppColors.superficie,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFF1E293B)),
+                    border: Border.all(color: AppColors.borde),
                   ),
                   child: TextField(
                     controller: diasTotalesController,
@@ -113,8 +115,8 @@ class PasoDestino extends StatelessWidget {
                     decoration: const InputDecoration(
                       labelText: 'Días totales',
                       contentPadding: EdgeInsets.symmetric(vertical: 12),
-                      labelStyle: TextStyle(color: Color(0xFF64748B), fontSize: 11),
-                      prefixIcon: Icon(Icons.date_range_outlined, color: Color(0xFF38BDF8), size: 18),
+                      labelStyle: TextStyle(color: AppColors.textoTenue, fontSize: 12),
+                      prefixIcon: Icon(Icons.date_range_outlined, color: AppColors.primario, size: 18),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
@@ -164,12 +166,12 @@ class PasoDestino extends StatelessWidget {
             return Theme(
               data: Theme.of(context).copyWith(
                 colorScheme: const ColorScheme.dark(
-                  primary: Color(0xFF38BDF8),
-                  onPrimary: Color(0xFF0B111E),
-                  surface: Color(0xFF131D31),
+                  primary: AppColors.primario,
+                  onPrimary: AppColors.fondo,
+                  surface: AppColors.superficie,
                   onSurface: Colors.white,
                 ),
-                dialogTheme: const DialogThemeData(backgroundColor: Color(0xFF0B111E)),
+                dialogTheme: const DialogThemeData(backgroundColor: AppColors.fondo),
               ),
               child: child!,
             );
@@ -182,19 +184,19 @@ class PasoDestino extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: const Color(0xFF131D31),
+          color: AppColors.superficie,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFF1E293B)),
+          border: Border.all(color: AppColors.borde),
         ),
         child: Row(
           children: [
-            const Icon(Icons.calendar_month_outlined, color: Color(0xFF38BDF8), size: 20),
+            const Icon(Icons.calendar_month_outlined, color: AppColors.primario, size: 20),
             const SizedBox(width: 8),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Fecha de salida', style: TextStyle(color: Color(0xFF64748B), fontSize: 10)),
+                  const Text('Fecha de salida', style: TextStyle(color: AppColors.textoTenue, fontSize: 12)),
                   Text(
                     '${formatearFecha(fechaSalida)} (${nombreMes(fechaSalida)})',
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
@@ -210,23 +212,25 @@ class PasoDestino extends StatelessWidget {
   }
 
   Widget _buildSugerenciaTile(String ciudad, IconData icon) {
-    return GestureDetector(
-      // El TextField escucha al controller, no hace falta setState.
-      onTap: () => destinoController.text = ciudad,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: const Color(0xFF131D31),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFF1E293B)),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: const Color(0xFF64748B), size: 18),
-            const SizedBox(width: 12),
-            Text(ciudad, style: const TextStyle(color: Colors.white70, fontSize: 13)),
-          ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Tocable(
+        // El TextField escucha al controller, no hace falta setState.
+        onTap: () => destinoController.text = ciudad,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: AppColors.superficie,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.borde),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: AppColors.textoTenue, size: 18),
+              const SizedBox(width: 12),
+              Text(ciudad, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+            ],
+          ),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 /// Días en esta ciudad + recomendación de la IA, con botones +/-.
 class SelectorDiasCard extends StatelessWidget {
@@ -26,9 +27,9 @@ class SelectorDiasCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF131D31),
+        color: AppColors.superficie,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.borde),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,15 +45,15 @@ class SelectorDiasCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF38BDF8).withValues(alpha: 0.15),
+                  color: AppColors.primario.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFF38BDF8).withValues(alpha: 0.4)),
+                  border: Border.all(color: AppColors.primario.withValues(alpha: 0.4)),
                 ),
                 child: Text(
                   'Recomendado: $diasRecomendados d',
                   style: const TextStyle(
-                    color: Color(0xFF38BDF8),
-                    fontSize: 11,
+                    color: AppColors.primario,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -65,17 +66,19 @@ class SelectorDiasCard extends StatelessWidget {
             children: [
               Text(
                 'Seleccionados: $diasSeleccionados de $diasRestantes restantes',
-                style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                style: const TextStyle(color: AppColors.textoSecundario, fontSize: 12),
               ),
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.remove_circle_outline, color: Color(0xFF38BDF8)),
+                    tooltip: 'Un día menos',
+                    icon: const Icon(Icons.remove_circle_outline, color: AppColors.primario),
                     onPressed: diasSeleccionados > 1 ? () => onChanged(diasSeleccionados - 1) : null,
                   ),
                   Text('$diasSeleccionados d', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                   IconButton(
-                    icon: const Icon(Icons.add_circle_outline, color: Color(0xFF38BDF8)),
+                    tooltip: 'Un día más',
+                    icon: const Icon(Icons.add_circle_outline, color: AppColors.primario),
                     onPressed: diasSeleccionados < diasRestantes ? () => onChanged(diasSeleccionados + 1) : null,
                   ),
                 ],
@@ -85,7 +88,7 @@ class SelectorDiasCard extends StatelessWidget {
           if (costoParada > 0)
             Text(
               'Costo estimado de esta parada: ~USD $costoParada',
-              style: const TextStyle(color: Color(0xFF38BDF8), fontSize: 12, fontWeight: FontWeight.w600),
+              style: const TextStyle(color: AppColors.primario, fontSize: 12, fontWeight: FontWeight.w600),
             ),
           // Estadía completa: asigna todos los días que quedan a esta ciudad.
           if (_puedeQuedarseTodo)
@@ -93,7 +96,7 @@ class SelectorDiasCard extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: TextButton.icon(
                 style: TextButton.styleFrom(
-                  foregroundColor: const Color(0xFF38BDF8),
+                  foregroundColor: AppColors.primario,
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   visualDensity: VisualDensity.compact,
                 ),

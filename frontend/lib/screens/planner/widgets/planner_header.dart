@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
+import '../../../widgets/tocable.dart';
 
 /// Barra superior del planificador: volver, título del paso e indicador de IA.
 class PlannerHeader extends StatelessWidget {
@@ -27,66 +29,78 @@ class PlannerHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              if (pasoActual > 1 && pasoActual < 4) ...[
-                GestureDetector(
-                  onTap: onVolver,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    margin: const EdgeInsets.only(right: 12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF131D31),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFF1E293B)),
+          Expanded(
+            child: Row(
+              children: [
+                if (pasoActual > 1 && pasoActual < 4) ...[
+                  Tocable(
+                    onTap: onVolver,
+                    etiqueta: 'Volver al paso anterior',
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: AppColors.superficie,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.borde),
+                      ),
+                      child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
                     ),
-                    child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
+                  ),
+                  const SizedBox(width: 12),
+                ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        pasoActual == 5 ? 'Tu Itinerario' : 'Diseñador de Viajes',
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _subtitulo,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: AppColors.textoSecundario, fontSize: 12),
+                      ),
+                    ],
                   ),
                 ),
               ],
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    pasoActual == 5 ? 'Tu Itinerario' : 'Diseñador de Viajes',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    _subtitulo,
-                    style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
+          const SizedBox(width: 8),
           if (pasoActual == 5)
             IconButton(
-              icon: const Icon(Icons.refresh, color: Colors.white70),
+              // "Refrescar" sugería recargar la parada; en realidad empieza otro viaje.
+              tooltip: 'Empezar un viaje nuevo',
+              icon: const Icon(Icons.restart_alt, color: Colors.white70),
               onPressed: onReiniciar,
             )
           else
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
-                color: const Color(0xFF131D31),
+                color: AppColors.superficie,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF1E293B)),
+                border: Border.all(color: AppColors.borde),
               ),
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.auto_awesome, color: Color(0xFF38BDF8), size: 13),
+                  Icon(Icons.auto_awesome, color: AppColors.primario, size: 13),
                   SizedBox(width: 5),
                   Text(
                     'IA Activa',
                     style: TextStyle(
-                      color: Color(0xFF38BDF8),
-                      fontSize: 11,
+                      color: AppColors.primario,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

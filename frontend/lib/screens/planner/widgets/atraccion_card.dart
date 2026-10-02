@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 /// Atracción sugerida, con botón de reserva si requiere entrada.
 class AtraccionCard extends StatelessWidget {
@@ -21,10 +22,10 @@ class AtraccionCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF131D31),
+        color: AppColors.superficie,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: requiereTicket ? const Color(0xFFF59E0B).withValues(alpha: 0.3) : const Color(0xFF10B981).withValues(alpha: 0.3),
+          color: requiereTicket ? AppColors.advertencia.withValues(alpha: 0.3) : AppColors.exito.withValues(alpha: 0.3),
         ),
       ),
       child: Column(
@@ -51,7 +52,7 @@ class AtraccionCard extends StatelessWidget {
                   color: requiereTicket ? const Color(0xFFFEF3C7).withValues(alpha: 0.15) : const Color(0xFFD1FAE5).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: requiereTicket ? const Color(0xFFF59E0B) : const Color(0xFF10B981),
+                    color: requiereTicket ? AppColors.advertencia : AppColors.exito,
                   ),
                 ),
                 child: Row(
@@ -60,15 +61,15 @@ class AtraccionCard extends StatelessWidget {
                     Icon(
                       requiereTicket ? Icons.confirmation_number_outlined : Icons.check_circle_outline,
                       size: 13,
-                      color: requiereTicket ? const Color(0xFFF59E0B) : const Color(0xFF10B981),
+                      color: requiereTicket ? AppColors.advertencia : AppColors.exito,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       requiereTicket ? 'Entrada Paga' : 'Acceso Gratis',
                       style: TextStyle(
-                        color: requiereTicket ? const Color(0xFFF59E0B) : const Color(0xFF10B981),
+                        color: requiereTicket ? AppColors.advertencia : AppColors.exito,
                         fontWeight: FontWeight.bold,
-                        fontSize: 11,
+                        fontSize: 12,
                       ),
                     ),
                   ],
@@ -80,18 +81,18 @@ class AtraccionCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               consejo,
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12, height: 1.35),
+              style: const TextStyle(color: AppColors.textoSecundario, fontSize: 12, height: 1.35),
             ),
           ],
           if (requiereTicket) ...[
             const SizedBox(height: 12),
             SizedBox(
               width: double.infinity,
-              height: 42,
+              height: 48,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF59E0B),
-                  foregroundColor: const Color(0xFF0B111E),
+                  backgroundColor: AppColors.advertencia,
+                  foregroundColor: AppColors.fondo,
                   elevation: 0,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   padding: const EdgeInsets.symmetric(horizontal: 12),

@@ -4,6 +4,7 @@ import '../../../models/viaje_guardado.dart';
 import '../../../services/export_helper.dart';
 import '../../../services/pdf_generator.dart';
 import '../../../utils/city_images.dart';
+import '../../../theme/app_colors.dart';
 
 class ViajeCard extends StatelessWidget {
   final ViajeGuardado viaje;
@@ -20,9 +21,9 @@ class ViajeCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFF131D31),
+        color: AppColors.superficie,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.borde),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
@@ -41,15 +42,15 @@ class ViajeCard extends StatelessWidget {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Container(
                       height: 130,
-                      color: const Color(0xFF1E293B),
-                      child: const Center(child: Icon(Icons.location_city, color: Color(0xFF38BDF8), size: 36)),
+                      color: AppColors.borde,
+                      child: const Center(child: Icon(Icons.location_city, color: AppColors.primario, size: 36)),
                     ),
                   ),
                   Container(
                     height: 130,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.transparent, const Color(0xFF131D31).withValues(alpha: 0.95)],
+                        colors: [Colors.transparent, AppColors.superficie.withValues(alpha: 0.95)],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                       ),
@@ -85,19 +86,19 @@ class ViajeCard extends StatelessWidget {
                       children: [
                         Text(
                           '${viaje.diasTotales} días • ${viaje.fechaInicio.day}/${viaje.fechaInicio.month}',
-                          style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                          style: const TextStyle(color: AppColors.textoSecundario, fontSize: 12),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           '$totalActividades actividades sugeridas',
-                          style: const TextStyle(color: Color(0xFF38BDF8), fontSize: 11, fontWeight: FontWeight.w600),
+                          style: const TextStyle(color: AppColors.primario, fontSize: 12, fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1E293B),
-                        foregroundColor: const Color(0xFF38BDF8),
+                        backgroundColor: AppColors.borde,
+                        foregroundColor: AppColors.primario,
                         elevation: 0,
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -121,12 +122,12 @@ class ViajeCard extends StatelessWidget {
       icon: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: const Color(0xFF0B111E).withValues(alpha: 0.7),
+          color: AppColors.fondo.withValues(alpha: 0.7),
           shape: BoxShape.circle,
         ),
         child: const Icon(Icons.more_vert, color: Colors.white, size: 18),
       ),
-      color: const Color(0xFF1E293B),
+      color: AppColors.borde,
       onSelected: (value) {
         if (value == 'pdf') exportarItinerarioPdf(viaje);
         if (value == 'txt') compartirItinerarioTexto(viaje);
@@ -136,7 +137,7 @@ class ViajeCard extends StatelessWidget {
         PopupMenuItem(
           value: 'pdf',
           child: ListTile(
-            leading: Icon(Icons.picture_as_pdf, color: Color(0xFF38BDF8), size: 20),
+            leading: Icon(Icons.picture_as_pdf, color: AppColors.primario, size: 20),
             title: Text('Exportar PDF', style: TextStyle(color: Colors.white, fontSize: 13)),
             dense: true,
           ),
@@ -152,8 +153,8 @@ class ViajeCard extends StatelessWidget {
         PopupMenuItem(
           value: 'delete',
           child: ListTile(
-            leading: Icon(Icons.delete_outline, color: Color(0xFFEF4444), size: 20),
-            title: Text('Eliminar', style: TextStyle(color: Color(0xFFEF4444), fontSize: 13)),
+            leading: Icon(Icons.delete_outline, color: AppColors.error, size: 20),
+            title: Text('Eliminar', style: TextStyle(color: AppColors.error, fontSize: 13)),
             dense: true,
           ),
         ),

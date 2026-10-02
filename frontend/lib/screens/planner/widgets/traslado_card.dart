@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../theme/app_colors.dart';
 
 // 🚆 TRASLADO SUGERIDO (OMIO)
 class TrasladoCard extends StatelessWidget {
@@ -16,16 +17,16 @@ class TrasladoCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 24),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF131D31),
+        color: AppColors.superficie,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFF1E293B)),
+        border: Border.all(color: AppColors.borde),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.directions_subway_outlined, color: Color(0xFF38BDF8), size: 20),
+              const Icon(Icons.directions_subway_outlined, color: AppColors.primario, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Traslado: ${traslado['medio_sugerido'] ?? 'Tren / Bus'}',
@@ -36,12 +37,12 @@ class TrasladoCard extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             costo > 0 ? '$duracion • Costo estimado: ~USD $costo' : duracion,
-            style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+            style: const TextStyle(color: AppColors.textoSecundario, fontSize: 12),
           ),
           const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
-            height: 38,
+            height: 48,
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFFA6B38),

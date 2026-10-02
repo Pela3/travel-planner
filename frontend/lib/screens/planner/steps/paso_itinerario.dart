@@ -10,6 +10,7 @@ import '../widgets/cronograma_diario.dart';
 import '../widgets/itinerario_hero.dart';
 import '../widgets/selector_dias_card.dart';
 import '../widgets/traslado_card.dart';
+import '../../../theme/app_colors.dart';
 
 // PASO 5: Itinerario con cabecera e información
 class PasoItinerario extends StatelessWidget {
@@ -127,7 +128,7 @@ class PasoItinerario extends StatelessWidget {
       // Resumen de la ciudad
       Text(
         parada['resumen'] ?? '',
-        style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13, height: 1.4),
+        style: const TextStyle(color: AppColors.textoSecundario, fontSize: 13, height: 1.4),
       ),
       const SizedBox(height: 20),
 
@@ -186,7 +187,7 @@ class PasoItinerario extends StatelessWidget {
           height: 52,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF10B981),
+              backgroundColor: AppColors.exito,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
@@ -200,15 +201,15 @@ class PasoItinerario extends StatelessWidget {
         ...?(parada['proximas_paradas'] as List<dynamic>?)?.map((p) => Container(
               margin: const EdgeInsets.only(bottom: 10),
               child: ListTile(
-                tileColor: const Color(0xFF131D31),
+                tileColor: AppColors.superficie,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
-                  side: const BorderSide(color: Color(0xFF1E293B)),
+                  side: const BorderSide(color: AppColors.borde),
                 ),
-                leading: const Icon(Icons.directions_train, color: Color(0xFF38BDF8)),
+                leading: const Icon(Icons.directions_train, color: AppColors.primario),
                 title: Text(p['ciudad'] ?? '', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
-                subtitle: Text('${p['tiempo_traslado']} • ${p['por_que_visitarlo']}', style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11)),
-                trailing: const Icon(Icons.arrow_forward_ios, color: Color(0xFF64748B), size: 14),
+                subtitle: Text('${p['tiempo_traslado']} • ${p['por_que_visitarlo']}', style: const TextStyle(color: AppColors.textoSecundario, fontSize: 12)),
+                trailing: const Icon(Icons.arrow_forward_ios, color: AppColors.textoTenue, size: 14),
                 onTap: () => onConfirmar(p['ciudad']),
               ),
             )),
@@ -222,13 +223,13 @@ class PasoItinerario extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFF59E0B).withValues(alpha: 0.12),
+        color: AppColors.advertencia.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.5)),
+        border: Border.all(color: AppColors.advertencia.withValues(alpha: 0.5)),
       ),
       child: const Row(
         children: [
-          Icon(Icons.info_outline, color: Color(0xFFF59E0B), size: 20),
+          Icon(Icons.info_outline, color: AppColors.advertencia, size: 20),
           SizedBox(width: 10),
           Expanded(
             child: Text(
@@ -259,7 +260,7 @@ class PasoItinerario extends StatelessWidget {
       Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: const Color(0xFF131D31),
+          color: AppColors.superficie,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.redAccent.withValues(alpha: 0.5)),
         ),
@@ -288,19 +289,19 @@ class PasoItinerario extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF131D31),
+        color: AppColors.superficie,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF10B981)),
+        border: Border.all(color: AppColors.exito),
       ),
       child: Column(
         children: [
-          const Icon(Icons.check_circle, color: Color(0xFF10B981), size: 48),
+          const Icon(Icons.check_circle, color: AppColors.exito, size: 48),
           const SizedBox(height: 12),
           const Text('¡Viaje completado!', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 6),
           Text(
             'Presupuesto total estimado: ~USD $costoAcumulado',
-            style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+            style: const TextStyle(color: AppColors.textoSecundario, fontSize: 13),
           ),
         ],
       ),

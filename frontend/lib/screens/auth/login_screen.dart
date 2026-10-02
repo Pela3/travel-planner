@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../config.dart';
 import '../../services/auth_service.dart';
 import 'widgets/campo_auth.dart';
+import '../../theme/app_colors.dart';
 
 /// Pantalla de ingreso: Google o email y contraseña (entrar o crear cuenta).
 /// Al entrar, AuthGate muestra la app sola.
@@ -70,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0B111E),
+      backgroundColor: AppColors.fondo,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -91,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(
                     _creandoCuenta ? 'Creá tu cuenta y guardá tus viajes.' : 'Entrá para ver y guardar tus viajes.',
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+                    style: const TextStyle(color: AppColors.textoSecundario, fontSize: 14),
                   ),
                   const SizedBox(height: 32),
                   _botonGoogle(),
@@ -108,8 +109,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 54,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF38BDF8),
-                        foregroundColor: const Color(0xFF0B111E),
+                        backgroundColor: AppColors.primario,
+                        foregroundColor: AppColors.fondo,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                       ),
                       onPressed: _cargando ? null : _conEmail,
@@ -124,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (!_creandoCuenta)
                     TextButton(
                       onPressed: _cargando ? null : _recuperar,
-                      child: const Text('¿Olvidaste tu contraseña?', style: TextStyle(color: Color(0xFF94A3B8))),
+                      child: const Text('¿Olvidaste tu contraseña?', style: TextStyle(color: AppColors.textoSecundario)),
                     ),
                   const SizedBox(height: 8),
                   Wrap(
@@ -133,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Text(
                         _creandoCuenta ? '¿Ya tenés cuenta?' : '¿No tenés cuenta?',
-                        style: const TextStyle(color: Color(0xFF94A3B8)),
+                        style: const TextStyle(color: AppColors.textoSecundario),
                       ),
                       TextButton(
                         onPressed: _cargando
@@ -144,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }),
                         child: Text(
                           _creandoCuenta ? 'Iniciá sesión' : 'Creá una',
-                          style: const TextStyle(color: Color(0xFF38BDF8), fontWeight: FontWeight.bold),
+                          style: const TextStyle(color: AppColors.primario, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -155,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: const Text(
                       'Al continuar aceptás la Política de privacidad',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Color(0xFF64748B), fontSize: 12, decoration: TextDecoration.underline),
+                      style: TextStyle(color: AppColors.textoTenue, fontSize: 12, decoration: TextDecoration.underline),
                     ),
                   ),
                 ],
@@ -247,12 +248,12 @@ class _Separador extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Row(
       children: [
-        Expanded(child: Divider(color: Color(0xFF1E293B))),
+        Expanded(child: Divider(color: AppColors.borde)),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 12),
-          child: Text('o con tu email', style: TextStyle(color: Color(0xFF64748B), fontSize: 12)),
+          child: Text('o con tu email', style: TextStyle(color: AppColors.textoTenue, fontSize: 12)),
         ),
-        Expanded(child: Divider(color: Color(0xFF1E293B))),
+        Expanded(child: Divider(color: AppColors.borde)),
       ],
     );
   }

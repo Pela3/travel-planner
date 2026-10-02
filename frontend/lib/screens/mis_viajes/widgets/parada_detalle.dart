@@ -7,6 +7,7 @@ import '../../planner/widgets/atraccion_card.dart';
 import '../../planner/widgets/clima_card.dart';
 import '../../planner/widgets/cronograma_diario.dart';
 import '../../planner/widgets/traslado_card.dart';
+import '../../../theme/app_colors.dart';
 
 /// Una parada de un viaje guardado, desplegable, con todo su detalle.
 class ParadaDetalle extends StatelessWidget {
@@ -30,11 +31,11 @@ class ParadaDetalle extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: Material(
-        color: const Color(0xFF131D31),
+        color: AppColors.superficie,
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(color: Color(0xFF1E293B)),
+          side: const BorderSide(color: AppColors.borde),
         ),
         child: Theme(
           // Sin las líneas divisorias que ExpansionTile dibuja por defecto.
@@ -43,14 +44,14 @@ class ParadaDetalle extends StatelessWidget {
             initiallyExpanded: expandidaInicialmente,
             tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            iconColor: const Color(0xFF38BDF8),
-            collapsedIconColor: const Color(0xFF64748B),
+            iconColor: AppColors.primario,
+            collapsedIconColor: AppColors.textoTenue,
             leading: CircleAvatar(
               radius: 16,
-              backgroundColor: const Color(0xFF38BDF8).withValues(alpha: 0.15),
+              backgroundColor: AppColors.primario.withValues(alpha: 0.15),
               child: Text(
                 '$numero',
-                style: const TextStyle(color: Color(0xFF38BDF8), fontWeight: FontWeight.bold, fontSize: 13),
+                style: const TextStyle(color: AppColors.primario, fontWeight: FontWeight.bold, fontSize: 13),
               ),
             ),
             title: Text(
@@ -60,12 +61,12 @@ class ParadaDetalle extends StatelessWidget {
             subtitle: Text(
               '${parada.dias} ${parada.dias == 1 ? 'día' : 'días'} • ${formatearFecha(parada.fechaInicio)} al ${formatearFecha(fechaFin)}'
               '${parada.costoTotalParada > 0 ? ' • ~USD ${parada.costoTotalParada}' : ''}',
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+              style: const TextStyle(color: AppColors.textoSecundario, fontSize: 12),
             ),
             expandedCrossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (parada.resumen.isNotEmpty) ...[
-                Text(parada.resumen, style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13, height: 1.4)),
+                Text(parada.resumen, style: const TextStyle(color: AppColors.textoSecundario, fontSize: 13, height: 1.4)),
                 const SizedBox(height: 14),
               ],
               if (parada.traslado != null)
@@ -95,22 +96,25 @@ class ParadaDetalle extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 6, bottom: 10),
                     child: Text(
                       'Día ${i + 1} • ${formatearFecha(parada.fechaInicio.add(Duration(days: i)))}',
-                      style: const TextStyle(color: Color(0xFF38BDF8), fontWeight: FontWeight.bold, fontSize: 13),
+                      style: const TextStyle(color: AppColors.primario, fontWeight: FontWeight.bold, fontSize: 13),
                     ),
                   ),
                   TimelineItem(
                     hora: dia.horarioManana?.split('-').first.trim() ?? '09:30',
-                    franja: '🌅 Mañana',
+                    icono: Icons.wb_twilight,
+                    franja: 'Mañana',
                     detalle: dia.manana,
                   ),
                   TimelineItem(
                     hora: dia.horarioTarde?.split('-').first.trim() ?? '14:00',
-                    franja: '☀️ Tarde',
+                    icono: Icons.wb_sunny_outlined,
+                    franja: 'Tarde',
                     detalle: dia.tarde,
                   ),
                   TimelineItem(
                     hora: dia.horarioNoche?.split('-').first.trim() ?? '20:30',
-                    franja: '🌙 Noche',
+                    icono: Icons.nightlight_outlined,
+                    franja: 'Noche',
                     detalle: dia.noche,
                     isLast: true,
                   ),

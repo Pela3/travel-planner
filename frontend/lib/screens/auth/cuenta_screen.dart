@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../config.dart';
 import '../../services/auth_service.dart';
+import '../../theme/app_colors.dart';
 
 /// Datos de la cuenta, política de privacidad, cerrar sesión y eliminar cuenta
 /// (Google Play exige que se pueda eliminar la cuenta desde la app).
@@ -29,7 +30,7 @@ class _CuentaScreenState extends State<CuentaScreen> {
     final confirmado = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF131D31),
+        backgroundColor: AppColors.superficie,
         title: const Text('¿Eliminar tu cuenta?', style: TextStyle(color: Colors.white)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -38,7 +39,7 @@ class _CuentaScreenState extends State<CuentaScreen> {
             Text(
               'Se borran tu cuenta y todos tus viajes guardados. No se puede deshacer.'
               '${conGoogle ? '\n\nVamos a pedirte que elijas tu cuenta de Google para confirmar.' : ''}',
-              style: const TextStyle(color: Color(0xFFCBD5E1)),
+              style: const TextStyle(color: AppColors.textoClaro),
             ),
             if (!conGoogle) ...[
               const SizedBox(height: 16),
@@ -85,9 +86,9 @@ class _CuentaScreenState extends State<CuentaScreen> {
     final nombre = usuario?.displayName ?? '';
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B111E),
+      backgroundColor: AppColors.fondo,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0B111E),
+        backgroundColor: AppColors.fondo,
         foregroundColor: Colors.white,
         title: const Text('Mi cuenta'),
       ),
@@ -102,7 +103,7 @@ class _CuentaScreenState extends State<CuentaScreen> {
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
           const SizedBox(height: 4),
           Text(usuario?.email ?? '',
-              textAlign: TextAlign.center, style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14)),
+              textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textoSecundario, fontSize: 14)),
           const SizedBox(height: 30),
           _Opcion(
             icono: Icons.privacy_tip_outlined,
@@ -135,13 +136,13 @@ class _Opcion extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Material(
-        color: const Color(0xFF131D31),
+        color: AppColors.superficie,
         borderRadius: BorderRadius.circular(16),
         child: ListTile(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           leading: Icon(icono, color: color),
           title: Text(texto, style: TextStyle(color: color)),
-          trailing: const Icon(Icons.chevron_right, color: Color(0xFF64748B)),
+          trailing: const Icon(Icons.chevron_right, color: AppColors.textoTenue),
           onTap: onTap,
         ),
       ),
@@ -164,9 +165,9 @@ class AvatarUsuario extends StatelessWidget {
       height: radio * 2,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: const Color(0xFF38BDF8), width: 1.5),
+        border: Border.all(color: AppColors.primario, width: 1.5),
         gradient: const LinearGradient(
-          colors: [Color(0xFF0284C7), Color(0xFF38BDF8)],
+          colors: [AppColors.primarioOscuro, AppColors.primario],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

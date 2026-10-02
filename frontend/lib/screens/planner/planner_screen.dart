@@ -15,6 +15,7 @@ import 'steps/paso_estilo.dart';
 import 'steps/paso_generando.dart';
 import 'steps/paso_itinerario.dart';
 import 'widgets/planner_header.dart';
+import '../../theme/app_colors.dart';
 
 class PlannerScreen extends StatefulWidget {
   final String? destinoInicial;
@@ -73,19 +74,19 @@ class _PlannerScreenState extends State<PlannerScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF131D31),
+        backgroundColor: AppColors.superficie,
         title: const Text('¿Retomar tu viaje?', style: TextStyle(color: Colors.white)),
         content: Text(
           'Cerraste la app a mitad de la planificación de:\n\n'
           '${borrador.recorrido}\n'
           '${borrador.diasPlanificados > 0 ? '${borrador.diasPlanificados} de ${borrador.diasTotales} días armados.' : 'Estabas por confirmar la primera parada.'}\n\n'
           '¿Querés seguir donde lo dejaste?',
-          style: const TextStyle(color: Color(0xFFCBD5E1), height: 1.35),
+          style: const TextStyle(color: AppColors.textoClaro, height: 1.35),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('No, empezar de cero', style: TextStyle(color: Color(0xFF94A3B8))),
+            child: const Text('No, empezar de cero', style: TextStyle(color: AppColors.textoSecundario)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
@@ -193,17 +194,17 @@ class _PlannerScreenState extends State<PlannerScreen> {
       final confirmado = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          backgroundColor: const Color(0xFF131D31),
+          backgroundColor: AppColors.superficie,
           title: const Text('¿Empezar un viaje nuevo?', style: TextStyle(color: Colors.white)),
           content: const Text(
             'Vas a perder las paradas que armaste de este viaje, porque todavía no está terminado ni guardado.',
-            style: TextStyle(color: Color(0xFF94A3B8)),
+            style: TextStyle(color: AppColors.textoSecundario),
           ),
           actions: [
             TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Seguir con este viaje')),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Empezar de nuevo', style: TextStyle(color: Color(0xFFEF4444))),
+              child: const Text('Empezar de nuevo', style: TextStyle(color: AppColors.error)),
             ),
           ],
         ),
@@ -443,7 +444,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0B111E),
+      backgroundColor: AppColors.fondo,
       body: SafeArea(
         child: Column(
           children: [

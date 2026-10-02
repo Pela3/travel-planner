@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/paso_encabezado.dart';
+import '../../../theme/app_colors.dart';
+import '../../../widgets/tocable.dart';
 
 // PASO 2: Tipo de Viaje
 class PasoEstilo extends StatelessWidget {
@@ -54,15 +56,17 @@ class PasoEstilo extends StatelessWidget {
 
   Widget _buildCardEstilo(String id, String label, IconData icon) {
     final bool sel = estiloSeleccionado == id;
-    return GestureDetector(
+    return Tocable(
       onTap: () => onEstiloChanged(id),
+      seleccionado: sel,
+      borderRadius: BorderRadius.circular(18),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: sel ? const Color(0xFF1E293B) : const Color(0xFF131D31),
+          color: sel ? AppColors.borde : AppColors.superficie,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: sel ? const Color(0xFF38BDF8) : const Color(0xFF1E293B),
+            color: sel ? AppColors.primario : AppColors.borde,
             width: sel ? 2 : 1,
           ),
         ),
@@ -70,7 +74,7 @@ class PasoEstilo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(icon, color: sel ? const Color(0xFF38BDF8) : const Color(0xFF64748B), size: 24),
+            Icon(icon, color: sel ? AppColors.primario : AppColors.textoTenue, size: 24),
             Text(
               label,
               style: TextStyle(

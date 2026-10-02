@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../data/destinos_populares.dart';
 import '../auth/cuenta_screen.dart';
-import 'widgets/categoria_chip.dart';
+import '../../widgets/chip_seleccion.dart';
 import 'widgets/destino_card.dart';
+import '../../theme/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
   /// Recibe la ciudad elegida y el estilo de viaje que corresponde a su categoría.
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         : destinosPopulares.where((d) => d.categoria == _categoriaSeleccionada).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0B111E),
+      backgroundColor: AppColors.fondo,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -60,12 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
                 child: Row(
+                  spacing: 10,
                   children: [
-                    _buildCategoriaChip('todos', '🌟 Todos'),
+                    _buildCategoriaChip('todos', 'Todos', Icons.explore_outlined),
                     // Solo las categorías que tienen destinos: antes "Naturaleza"
                     // aparecía y no mostraba nada.
                     for (final MapEntry(key: id, value: cat) in categoriasDestino.entries)
-                      if (destinosPopulares.any((d) => d.categoria == id)) _buildCategoriaChip(id, cat.etiqueta),
+                      if (destinosPopulares.any((d) => d.categoria == id)) _buildCategoriaChip(id, cat.etiqueta, cat.icono),
                   ],
                 ),
               ),
@@ -83,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Text(
                     '${destinosFiltrados.length} sugeridos',
-                    style: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                    style: const TextStyle(color: AppColors.textoTenue, fontSize: 12),
                   ),
                 ],
               ),
@@ -111,9 +113,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCategoriaChip(String id, String label) {
-    return CategoriaChip(
+  Widget _buildCategoriaChip(String id, String label, IconData icono) {
+    return ChipSeleccion(
       label: label,
+      icono: icono,
       seleccionado: _categoriaSeleccionada == id,
       onTap: () => setState(() => _categoriaSeleccionada = id),
     );
@@ -145,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 2),
               const Text(
                 '¿Cuál será tu próxima aventura?',
-                style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                style: TextStyle(color: AppColors.textoSecundario, fontSize: 12),
               ),
             ],
           ),
@@ -161,14 +164,15 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF0369A1), Color(0xFF0284C7)],
+          // Más oscuro que antes: el texto blanco llega al contraste mínimo.
+          colors: [Color(0xFF075985), Color(0xFF0369A1)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0284C7).withValues(alpha: 0.3),
+            color: AppColors.primarioOscuro.withValues(alpha: 0.3),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -186,9 +190,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.auto_awesome, color: Color(0xFF38BDF8), size: 14),
+                Icon(Icons.auto_awesome, color: AppColors.primario, size: 14),
                 SizedBox(width: 6),
-                Text('IA Itinerary Builder', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                Text('Planificador con IA', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
               ],
             ),
           ),
@@ -200,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 6),
           const Text(
             'Rutas inteligentes, cronogramas diarios y boletos oficiales.',
-            style: TextStyle(color: Colors.white70, fontSize: 12),
+            style: TextStyle(color: Colors.white, fontSize: 13),
           ),
         ],
       ),

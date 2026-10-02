@@ -55,7 +55,7 @@ Los itinerarios, precios y horarios son sugerencias generadas por IA: confirmá 
 | Tipo de app | Aplicación |
 | Categoría | Viajes y guías locales |
 | Etiquetas sugeridas | Planificador de viajes, Itinerarios, Guías de viaje |
-| Email de contacto | **[EMAIL DE CONTACTO]** (es público en la ficha) |
+| Email de contacto | **plannertravel42@gmail.com** (es público en la ficha) |
 | Sitio web | https://pela3.github.io/travel-planner/ |
 | Política de privacidad | https://pela3.github.io/travel-planner/privacidad/ |
 
@@ -108,7 +108,7 @@ No se declaran: ubicación, datos financieros, contactos, fotos, identificadores
 
 ## Antes de enviar a revisión
 
-- [ ] Completar `[NOMBRE DEL RESPONSABLE]` y `[EMAIL DE CONTACTO]` en `docs/privacidad/index.html` y en esta ficha.
-- [ ] Activar GitHub Pages (Settings → Pages → Deploy from branch → `main` / `/docs`) y verificar que abre la URL de la política.
+- [x] Completar nombre del responsable y email de contacto en la política y en esta ficha.
+- [x] Activar GitHub Pages (Settings → Pages → Deploy from branch → `main` / `/docs`) y verificar que abre la URL de la política.
 - [ ] Generar el bundle firmado: ver README → "Build de Android para Play Store".
 - [ ] Cuentas nuevas de desarrollador: Google exige una **prueba cerrada con al menos 12 testers durante 14 días** antes de poder publicar en producción.

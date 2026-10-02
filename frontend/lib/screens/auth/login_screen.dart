@@ -174,6 +174,8 @@ class _LoginScreenState extends State<LoginScreen> {
         style: OutlinedButton.styleFrom(
           backgroundColor: Colors.white,
           foregroundColor: const Color(0xFF1F2937),
+          disabledBackgroundColor: Colors.white70,
+          disabledForegroundColor: const Color(0xFF475569),
           side: BorderSide.none,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
@@ -199,6 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
             CampoAuth(
               controller: _nombre,
               etiqueta: 'Nombre',
+              textInputAction: TextInputAction.next,
               icono: Icons.person_outline,
               textCapitalization: TextCapitalization.words,
               autofillHints: const [AutofillHints.name],
@@ -209,6 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
           CampoAuth(
             controller: _email,
             etiqueta: 'Email',
+            textInputAction: TextInputAction.next,
             icono: Icons.mail_outline,
             keyboardType: TextInputType.emailAddress,
             autofillHints: const [AutofillHints.email],

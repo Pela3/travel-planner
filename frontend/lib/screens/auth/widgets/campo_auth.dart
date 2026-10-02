@@ -7,6 +7,7 @@ class CampoAuth extends StatefulWidget {
   final IconData icono;
   final bool esContrasena;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   final TextCapitalization textCapitalization;
   final Iterable<String>? autofillHints;
   final FormFieldValidator<String>? validator;
@@ -19,6 +20,7 @@ class CampoAuth extends StatefulWidget {
     required this.icono,
     this.esContrasena = false,
     this.keyboardType,
+    this.textInputAction,
     this.textCapitalization = TextCapitalization.none,
     this.autofillHints,
     this.validator,
@@ -43,6 +45,7 @@ class _CampoAuthState extends State<CampoAuth> {
       controller: widget.controller,
       obscureText: widget.esContrasena && _oculta,
       keyboardType: widget.keyboardType,
+      textInputAction: widget.textInputAction,
       textCapitalization: widget.textCapitalization,
       autofillHints: widget.autofillHints,
       validator: widget.validator,

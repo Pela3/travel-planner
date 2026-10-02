@@ -72,6 +72,7 @@ class _BuscadorCiudadManualState extends State<BuscadorCiudadManual> {
                   ),
                   child: TextField(
                     controller: _controller,
+                    textAlignVertical: TextAlignVertical.center,
                     textCapitalization: TextCapitalization.words,
                     style: const TextStyle(color: Colors.white, fontSize: 14),
                     decoration: const InputDecoration(

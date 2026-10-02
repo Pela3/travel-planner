@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../models/destino_popular.dart';
 import '../../../theme/app_colors.dart';
+import '../../../utils/city_images.dart';
 
 class DestinoCard extends StatelessWidget {
   final DestinoPopular destino;
@@ -25,8 +26,8 @@ class DestinoCard extends StatelessWidget {
           children: [
             Stack(
               children: [
-                Image.network(
-                  destino.imagenUrl,
+                Image(
+                  image: proveedorImagen(destino.imagenUrl),
                   height: 150,
                   width: double.infinity,
                   fit: BoxFit.cover,

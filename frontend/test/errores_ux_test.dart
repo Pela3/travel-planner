@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:frontend/app.dart';
+import 'package:frontend/data/destinos_populares.dart';
 import 'package:frontend/screens/main_navigation_screen.dart';
 import 'package:frontend/screens/home/home_screen.dart';
 import 'package:frontend/screens/planner/widgets/selector_dias_card.dart';
+import 'package:frontend/utils/city_images.dart';
 
 /// Scrollea hasta el widget (la pantalla de test es de 800x600) y lo toca.
 Future<void> tocar(WidgetTester tester, Finder f) async {
@@ -21,12 +25,27 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   group('Inicio', () {
-    testWidgets('no muestra filtros de categorías sin destinos', (tester) async {
+    test('cada categoría tiene al menos 4 destinos', () {
+      for (final id in categoriasDestino.keys) {
+        final cantidad = destinosPopulares.where((d) => d.categoria == id).length;
+        expect(cantidad, greaterThanOrEqualTo(4), reason: 'categoría $id');
+      }
+    });
+
+    test('las fotos incluidas en la app existen', () {
+      for (final d in destinosPopulares.where((d) => d.imagenUrl.startsWith('assets/'))) {
+        expect(File(d.imagenUrl).existsSync(), isTrue, reason: d.imagenUrl);
+      }
+      // El itinerario y Mis Viajes usan la misma foto que el inicio.
+      expect(obtenerImagenCiudad('Bariloche'), 'assets/destinos/bariloche.jpg');
+    });
+
+    testWidgets('muestra el filtro de todas las categorías', (tester) async {
       await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
 
-      expect(find.text('Cultura'), findsOneWidget);
-      // No hay destinos de naturaleza: el filtro no aparece (antes quedaba vacío).
-      expect(find.text('Naturaleza'), findsNothing);
+      for (final cat in categoriasDestino.values) {
+        expect(find.text(cat.etiqueta), findsOneWidget);
+      }
     });
 
     testWidgets('al planificar un destino pasa el estilo de su categoría', (tester) async {

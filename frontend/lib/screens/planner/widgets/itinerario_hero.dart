@@ -24,8 +24,8 @@ class ItinerarioHero extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Image.network(
-          obtenerImagenCiudad(ciudad),
+        Image(
+          image: proveedorImagen(obtenerImagenCiudad(ciudad)),
           height: 220,
           width: double.infinity,
           fit: BoxFit.cover,

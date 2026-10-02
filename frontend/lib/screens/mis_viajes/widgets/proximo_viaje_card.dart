@@ -25,8 +25,8 @@ class ProximoViajeCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
-            child: Image.network(
-              obtenerImagenCiudad(ciudadPrincipal, ancho: 600),
+            child: Image(
+              image: proveedorImagen(obtenerImagenCiudad(ciudadPrincipal, ancho: 600)),
               height: 140,
               width: double.infinity,
               fit: BoxFit.cover,

@@ -76,9 +76,9 @@ class ViajeDetalleScreen extends StatelessWidget {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(
+                  Image(
                     // Mismo ancho que en la lista: sin internet se reutiliza la foto en caché.
-                    obtenerImagenCiudad(ciudadPrincipal, ancho: 600),
+                    image: proveedorImagen(obtenerImagenCiudad(ciudadPrincipal, ancho: 600)),
                     fit: BoxFit.cover,
                     // Sin internet queda el fondo liso: el resto de la pantalla sigue andando.
                     errorBuilder: (context, error, stackTrace) => Container(color: AppColors.borde),

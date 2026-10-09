@@ -29,6 +29,7 @@ class ApiException implements Exception {
     // 429 puede ser el límite por minuto o el cupo del día: el backend dice cuál.
     if (statusCode == 429) return mensajeServidor ?? 'Demasiadas solicitudes. Esperá un minuto e intentá de nuevo.';
     if (statusCode == 401) return 'Tu sesión venció. Cerrá sesión y volvé a entrar.';
+    if (statusCode == 403) return mensajeServidor ?? 'Tu cuenta no tiene permiso para usar la app.';
     if (statusCode == 400) return 'Revisá los datos del viaje (destino, origen y días) e intentá de nuevo.';
     return 'Error del servidor: $statusCode';
   }

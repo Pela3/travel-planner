@@ -54,9 +54,15 @@ type claimsFirebase struct {
 	Sub string `json:"sub"`
 	Exp int64  `json:"exp"`
 	Iat int64  `json:"iat"`
+	// Google lo trae en true; email y contraseña, recién después de tocar el
+	// link del correo de verificación.
+	EmailVerified bool `json:"email_verified"`
 }
 
-var errTokenInvalido = errors.New("token inválido")
+var (
+	errTokenInvalido     = errors.New("token inválido")
+	errEmailSinVerificar = errors.New("email sin verificar")
+)
 
 // Verificar devuelve el uid del usuario si el token es válido.
 func (v *VerificadorFirebase) Verificar(ctx context.Context, token string) (string, error) {
@@ -98,6 +104,11 @@ func (v *VerificadorFirebase) Verificar(ctx context.Context, token string) (stri
 		ahora.After(time.Unix(c.Exp, 0).Add(toleranciaReloj)),
 		ahora.Add(toleranciaReloj).Before(time.Unix(c.Iat, 0)):
 		return "", errTokenInvalido
+	}
+	// Token válido, pero la cuenta todavía no verificó el email: así un bot
+	// no puede usar la IA con cuentas de emails inventados.
+	if !c.EmailVerified {
+		return "", errEmailSinVerificar
 	}
 	return c.Sub, nil
 }
@@ -199,6 +210,12 @@ func (v *VerificadorFirebase) Middleware() gin.HandlerFunc {
 			return
 		}
 		uid, err := v.Verificar(c.Request.Context(), token)
+		if errors.Is(err, errEmailSinVerificar) {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+				"error": "Verificá tu email para usar la app: tocá el link del correo que te mandamos.",
+			})
+			return
+		}
 		if err != nil {
 			if !errors.Is(err, errTokenInvalido) {
 				// Falla de Google al dar las claves: no es culpa del usuario.

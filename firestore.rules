@@ -4,10 +4,17 @@ rules_version = '2';
 // Firestore Database → Reglas → Publicar.
 service cloud.firestore {
   match /databases/{database}/documents {
+    // El dueño, con el email verificado (Google ya lo trae verificado; con
+    // email y contraseña hay que tocar el link del correo).
+    function esDuenoVerificado(uid) {
+      return request.auth != null && request.auth.uid == uid
+        && request.auth.token.email_verified == true;
+    }
+
     // Cada usuario solo ve y modifica sus propios viajes.
     match /usuarios/{uid}/viajes/{viajeId} {
-      allow read, delete: if request.auth != null && request.auth.uid == uid;
-      allow create, update: if request.auth != null && request.auth.uid == uid
+      allow read, delete: if esDuenoVerificado(uid);
+      allow create, update: if esDuenoVerificado(uid)
         && request.resource.data.keys().hasOnly(['json', 'creado'])
         && request.resource.data.json is string
         && request.resource.data.json.size() < 500000

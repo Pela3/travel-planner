@@ -396,7 +396,7 @@ REGLAS ESTRICTAS:
 3. Cada descripción ("manana", "tarde", "noche") debe ser concisa (máximo 20 palabras). Horarios en formato "09:30 - 13:00".`,
 		req.Ciudad,
 		req.Estilo,
-		strings.Join(req.LugaresYaVistos, "; "),
+		lugaresLimpios(req.LugaresYaVistos),
 		req.DiasAdicionales,
 		req.DiaInicio,
 		req.DiaInicio+req.DiasAdicionales-1,
@@ -443,4 +443,14 @@ func registrarTokens(config *genai.GenerateContentConfig, uso *genai.GenerateCon
 	}
 	log.Printf("Tokens Gemini: entrada=%d salida=%d pensamiento=%d total=%d (límite de salida %d)",
 		uso.PromptTokenCount, uso.CandidatesTokenCount, uso.ThoughtsTokenCount, uso.TotalTokenCount, limite)
+}
+
+func lugaresLimpios(lugares []string) string {
+	limpios := make([]string, 0, len(lugares))
+	for _, l := range lugares {
+		if l = models.LimpiarTexto(l); l != "" {
+			limpios = append(limpios, l)
+		}
+	}
+	return strings.Join(limpios, "; ")
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
+import '../../../utils/validaciones.dart';
 
 /// Campo para elegir cualquier ciudad como próxima parada.
 class BuscadorCiudadManual extends StatefulWidget {
@@ -22,6 +23,11 @@ class _BuscadorCiudadManualState extends State<BuscadorCiudadManual> {
 
   void _enviar(String value) {
     final ciudad = value.trim();
+    final error = validarNombreLugar(ciudad, campo: 'La ciudad');
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+      return;
+    }
     if (ciudad.isNotEmpty) {
       _controller.clear();
       FocusScope.of(context).unfocus();

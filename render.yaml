@@ -24,3 +24,8 @@ services:
       # Solo usuarios con sesión iniciada en la app pueden usar la API.
       - key: FIREBASE_PROJECT_ID
         value: travel-planner-4712c
+      # Consultas a la IA por día: por usuario y en total (techo de gasto).
+      - key: CUOTA_DIARIA_POR_USUARIO
+        value: "60"
+      - key: CUOTA_DIARIA_GLOBAL
+        value: "3000"

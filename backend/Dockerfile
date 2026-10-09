@@ -1,6 +1,6 @@
 # --- Build ---
 # Versión exacta: tiene que coincidir con la de go.mod (con parches de seguridad).
-FROM golang:1.26.9-alpine AS build
+FROM golang:1.27.0-alpine AS build
 WORKDIR /src
 
 # Descargar dependencias primero para aprovechar la caché de capas.

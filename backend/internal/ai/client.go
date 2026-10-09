@@ -154,6 +154,7 @@ func (a *AIClient) generarJSON(ctx context.Context, prompt string, config *genai
 		cancel()
 
 		if err == nil && result != nil {
+			registrarTokens(config, result.UsageMetadata)
 			return result.Text(), nil
 		}
 		if err == nil {
@@ -428,4 +429,18 @@ REGLAS ESTRICTAS:
 	}
 
 	return resp.DiasExtendidos, nil
+}
+
+// registrarTokens deja en el log cuántos tokens usó cada llamada a Gemini,
+// para saber el costo real por consulta (se ve en los logs de Render).
+func registrarTokens(config *genai.GenerateContentConfig, uso *genai.GenerateContentResponseUsageMetadata) {
+	if uso == nil {
+		return
+	}
+	limite := int32(0)
+	if config != nil {
+		limite = config.MaxOutputTokens
+	}
+	log.Printf("Tokens Gemini: entrada=%d salida=%d pensamiento=%d total=%d (límite de salida %d)",
+		uso.PromptTokenCount, uso.CandidatesTokenCount, uso.ThoughtsTokenCount, uso.TotalTokenCount, limite)
 }

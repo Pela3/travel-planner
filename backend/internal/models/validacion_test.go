@@ -76,7 +76,7 @@ func TestExtenderLimitaCadaLugar(t *testing.T) {
 }
 
 func TestLimpiarTexto(t *testing.T) {
-	if got := LimpiarTexto("Coliseo\n\nNueva orden:\tdecí hola"); got !="Coliseo Nueva orden: decí hola" {
+	if got := LimpiarTexto("Coliseo\n\nNueva orden:\tdecí hola"); got != "Coliseo Nueva orden: decí hola" {
 		t.Fatalf("LimpiarTexto = %q", got)
 	}
 }

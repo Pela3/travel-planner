@@ -1,20 +1,37 @@
-# Dependabot abre un PR cuando sale una actualización de seguridad (o una
-# versión nueva) de una dependencia. Revisión semanal para no llenar de PRs.
+# Dependabot abre PRs cuando sale una versión nueva (o un arreglo de seguridad)
+# de una dependencia. Las actualizaciones chicas (minor y patch) vienen
+# agrupadas en un solo PR por ecosistema, una vez por semana, para no llenar el
+# repo de PRs. Las de seguridad llegan aparte y enseguida.
 version: 2
 updates:
   - package-ecosystem: gomod
     directory: /backend
     schedule:
       interval: weekly
+    groups:
+      go-menores:
+        update-types: [minor, patch]
   - package-ecosystem: pub
     directory: /frontend
     schedule:
       interval: weekly
+    groups:
+      flutter-menores:
+        update-types: [minor, patch]
   - package-ecosystem: docker
     directory: /backend
     schedule:
       interval: weekly
+    ignore:
+      # La versión de Go se cambia a propósito y junto con go.mod (el CI compila
+      # con la de go.mod y Render con la del Dockerfile: tienen que coincidir).
+      # Acá solo entran parches de la misma versión (1.26.x).
+      - dependency-name: golang
+        update-types: [version-update:semver-major, version-update:semver-minor]
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]

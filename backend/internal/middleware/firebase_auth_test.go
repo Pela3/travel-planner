@@ -11,6 +11,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 
@@ -47,11 +48,12 @@ func firmar(t *testing.T, k *rsa.PrivateKey, kid string, claims map[string]any) 
 
 func claimsValidos() map[string]any {
 	return map[string]any{
-		"aud": proyecto,
-		"iss": "https://securetoken.google.com/" + proyecto,
-		"sub": "usuario-123",
-		"iat": ahoraFijo.Add(-10 * time.Minute).Unix(),
-		"exp": ahoraFijo.Add(50 * time.Minute).Unix(),
+		"aud":            proyecto,
+		"iss":            "https://securetoken.google.com/" + proyecto,
+		"sub":            "usuario-123",
+		"email_verified": true,
+		"iat":            ahoraFijo.Add(-10 * time.Minute).Unix(),
+		"exp":            ahoraFijo.Add(50 * time.Minute).Unix(),
 	}
 }
 
@@ -161,6 +163,21 @@ func TestMiddlewareFirebase(t *testing.T) {
 	w := pedirCon("Bearer " + firmar(t, k, "k1", claimsValidos()))
 	if w.Code != http.StatusOK || w.Body.String() != "usuario-123" {
 		t.Errorf("token válido: status %d body %q, want 200 usuario-123", w.Code, w.Body.String())
+	}
+
+	// Cuenta de email y contraseña que todavía no tocó el link del correo
+	// (o un token sin el dato): 403 con un mensaje que explica qué hacer.
+	for _, verificado := range []any{false, nil} {
+		claims := claimsValidos()
+		if verificado == nil {
+			delete(claims, "email_verified")
+		} else {
+			claims["email_verified"] = verificado
+		}
+		w = pedirCon("Bearer " + firmar(t, k, "k1", claims))
+		if w.Code != http.StatusForbidden || !strings.Contains(w.Body.String(), "Verificá tu email") {
+			t.Errorf("email_verified=%v: status %d body %q, want 403 Verificá tu email", verificado, w.Code, w.Body.String())
+		}
 	}
 }
 

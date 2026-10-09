@@ -39,8 +39,31 @@ class AuthService {
   static Future<void> registrar(String nombre, String email, String contrasena) => _intentar(() async {
         final cred = await _auth.createUserWithEmailAndPassword(email: email.trim(), password: contrasena);
         await cred.user?.updateDisplayName(nombre.trim());
+        await _auth.setLanguageCode('es');
+        await cred.user?.sendEmailVerification();
         await cred.user?.reload();
       });
+
+  /// Las cuentas de email y contraseña tienen que verificar el email antes de
+  /// usar la app (frena cuentas inventadas y bots). Google ya lo verifica.
+  static bool necesitaVerificarEmail(User usuario) => !usuario.emailVerified;
+
+  static Future<void> reenviarVerificacion() => _intentar(() async {
+        await _auth.setLanguageCode('es');
+        await usuario?.sendEmailVerification();
+      });
+
+  /// Vuelve a leer la cuenta de Firebase. Si el email ya se verificó, renueva
+  /// el token: el backend y Firestore leen "email_verified" de ahí.
+  static Future<bool> comprobarVerificacion() async {
+    final user = usuario;
+    if (user == null) return false;
+    await _intentar(() => user.reload());
+    final actualizado = _auth.currentUser;
+    if (actualizado == null || !actualizado.emailVerified) return false;
+    await actualizado.getIdToken(true);
+    return true;
+  }
 
   static Future<void> recuperarContrasena(String email) =>
       _intentar(() => _auth.sendPasswordResetEmail(email: email.trim()));

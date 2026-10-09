@@ -3,7 +3,7 @@ module travel-planner-api
 go 1.26.9
 
 require (
-	github.com/gin-contrib/cors v1.7.8
+	github.com/gin-contrib/cors v1.7.9
 	github.com/gin-gonic/gin v1.12.0
 	github.com/joho/godotenv v1.5.1
 	golang.org/x/time v0.16.0

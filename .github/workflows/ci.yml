@@ -16,7 +16,7 @@ jobs:
       run:
         working-directory: backend
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-go@v5
         with:
           go-version-file: backend/go.mod
@@ -32,7 +32,7 @@ jobs:
     name: Backend (imagen Docker)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build de la imagen que usa Render
         run: docker build -t travel-planner-api backend
 
@@ -43,7 +43,7 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -57,7 +57,7 @@ jobs:
     name: Vulnerabilidades (paquetes Flutter)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # Escáner oficial de OSV (la base de vulnerabilidades de Google) sobre pubspec.lock.
       - uses: google/osv-scanner-action/osv-scanner-action@v2.3.0
         with:

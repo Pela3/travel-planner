@@ -16,6 +16,7 @@ import 'steps/paso_generando.dart';
 import 'steps/paso_itinerario.dart';
 import 'widgets/planner_header.dart';
 import '../../theme/app_colors.dart';
+import '../../utils/validaciones.dart';
 
 class PlannerScreen extends StatefulWidget {
   final String? destinoInicial;
@@ -184,6 +185,9 @@ class _PlannerScreenState extends State<PlannerScreen> {
   String? _validarDatosViaje() {
     if (_destinoController.text.trim().isEmpty) return 'Ingresá un destino.';
     if (_origenController.text.trim().isEmpty) return 'Ingresá tu ciudad de partida.';
+    final errorNombre = validarNombreLugar(_destinoController.text, campo: 'El destino') ??
+        validarNombreLugar(_origenController.text, campo: 'La ciudad de partida');
+    if (errorNombre != null) return errorNombre;
     final dias = int.tryParse(_diasTotalesController.text.trim());
     if (dias == null || dias < 1 || dias > maxDiasViaje) {
       return 'Los días totales tienen que estar entre 1 y $maxDiasViaje.';

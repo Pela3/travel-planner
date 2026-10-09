@@ -9,8 +9,14 @@ class AppConfig {
   ///   flutter build appbundle --dart-define=API_BASE_URL=https://api.tu-dominio.com
   static const String _apiBaseUrl = String.fromEnvironment('API_BASE_URL');
 
+  /// Servidor de producción (siempre HTTPS).
+  static const String _urlProduccion = 'https://travel-planner-api-rx02.onrender.com';
+
   static String get baseUrl {
     if (_apiBaseUrl.isNotEmpty) return _apiBaseUrl;
+    // Una versión de tienda nunca apunta a un servidor local por http, aunque
+    // se haya compilado sin --dart-define.
+    if (kReleaseMode) return _urlProduccion;
 
     // Valores por defecto para desarrollo local.
     if (kIsWeb) {

@@ -9,11 +9,25 @@ import '../models/actividad_dia.dart';
 /// Error HTTP del backend (status distinto de 200).
 class ApiException implements Exception {
   final int statusCode;
-  ApiException(this.statusCode);
+
+  /// Mensaje del backend (campo "error"), si vino uno.
+  final String? mensajeServidor;
+  ApiException(this.statusCode, [this.mensajeServidor]);
+
+  /// Arma la excepción leyendo el mensaje de error de la respuesta.
+  factory ApiException.desde(http.Response response) {
+    String? mensaje;
+    try {
+      final data = jsonDecode(response.body);
+      if (data is Map && data['error'] is String) mensaje = data['error'] as String;
+    } catch (_) {}
+    return ApiException(response.statusCode, mensaje);
+  }
 
   @override
   String toString() {
-    if (statusCode == 429) return 'Demasiadas solicitudes. Esperá un minuto e intentá de nuevo.';
+    // 429 puede ser el límite por minuto o el cupo del día: el backend dice cuál.
+    if (statusCode == 429) return mensajeServidor ?? 'Demasiadas solicitudes. Esperá un minuto e intentá de nuevo.';
     if (statusCode == 401) return 'Tu sesión venció. Cerrá sesión y volvé a entrar.';
     if (statusCode == 400) return 'Revisá los datos del viaje (destino, origen y días) e intentá de nuevo.';
     return 'Error del servidor: $statusCode';
@@ -58,7 +72,7 @@ class TravelApi {
       }),
     ).timeout(_timeout);
 
-    if (response.statusCode != 200) throw ApiException(response.statusCode);
+    if (response.statusCode != 200) throw ApiException.desde(response);
     return jsonDecode(response.body) as Map<String, dynamic>;
   }
 
@@ -81,7 +95,7 @@ class TravelApi {
       }),
     ).timeout(_timeout);
 
-    if (response.statusCode != 200) throw ApiException(response.statusCode);
+    if (response.statusCode != 200) throw ApiException.desde(response);
     final data = jsonDecode(response.body);
     return (data['dias_extendidos'] as List<dynamic>)
         .map((d) => ActividadDia.fromJson(d as Map<String, dynamic>))

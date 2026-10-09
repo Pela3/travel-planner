@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Una vez por semana: aparecen vulnerabilidades nuevas aunque el código no cambie.
+  schedule:
+    - cron: "0 12 * * 1"
 
 jobs:
   backend:
@@ -22,6 +25,8 @@ jobs:
         run: test -z "$(gofmt -l .)" || (gofmt -l . && exit 1)
       - run: go vet ./...
       - run: go test ./...
+      - name: Vulnerabilidades conocidas (govulncheck)
+        run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
 
   docker:
     name: Backend (imagen Docker)
@@ -47,3 +52,13 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
+
+  dependencias-flutter:
+    name: Vulnerabilidades (paquetes Flutter)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Escáner oficial de OSV (la base de vulnerabilidades de Google) sobre pubspec.lock.
+      - uses: google/osv-scanner-action/osv-scanner-action@v2.3.0
+        with:
+          scan-args: --lockfile=frontend/pubspec.lock

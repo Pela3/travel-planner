@@ -31,17 +31,21 @@ func main() {
 	}
 
 	r := gin.Default()
+	r.Use(middleware.HeadersSeguridad())
 
-	// La app móvil no necesita CORS; esto aplica solo a Flutter Web.
-	// En producción definí ALLOWED_ORIGINS con los dominios permitidos (separados por coma).
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     origenesPermitidos(),
-		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: false,
-		MaxAge:           12 * time.Hour,
-	}))
+	// La app de Android no usa CORS (eso es de los navegadores). Solo se activa
+	// si se define ALLOWED_ORIGINS, por ejemplo para una versión web; si no,
+	// ningún sitio web puede llamar a la API desde el navegador de un usuario.
+	if origenes := origenesPermitidos(); len(origenes) > 0 {
+		r.Use(cors.New(cors.Config{
+			AllowOrigins:     origenes,
+			AllowMethods:     []string{"GET", "POST", "OPTIONS"},
+			AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+			ExposeHeaders:    []string{"Content-Length"},
+			AllowCredentials: false,
+			MaxAge:           12 * time.Hour,
+		}))
+	}
 
 	// Para que el hosting (Render, Cloud Run, etc.) pueda chequear que el servicio vive.
 	r.GET("/health", func(c *gin.Context) {
@@ -59,13 +63,21 @@ func main() {
 
 	// Con FIREBASE_PROJECT_ID, solo usuarios con sesión iniciada en la app pueden
 	// usar la API, y el límite por minuto se cuenta por usuario.
-	var middlewares []gin.HandlerFunc
+	middlewares := []gin.HandlerFunc{middleware.LimiteCuerpo(64 << 10)}
 	if projectID := strings.TrimSpace(os.Getenv("FIREBASE_PROJECT_ID")); projectID != "" {
 		middlewares = append(middlewares, middleware.NewVerificadorFirebase(projectID).Middleware())
+	} else if gin.Mode() == gin.ReleaseMode {
+		// En producción nunca se arranca sin login: si falta la variable, mejor
+		// que el deploy falle a que la API quede abierta y gaste la cuota de Gemini.
+		log.Fatal("FIREBASE_PROJECT_ID es obligatorio con GIN_MODE=release")
 	} else {
-		log.Println("Aviso: FIREBASE_PROJECT_ID vacío, la API no pide login")
+		log.Println("Aviso: FIREBASE_PROJECT_ID vacío, la API no pide login (solo para desarrollo)")
 	}
-	middlewares = append(middlewares, limiter.Middleware())
+	cuota := middleware.NewCuotaDiaria(
+		envInt("CUOTA_DIARIA_POR_USUARIO", 60),
+		envInt("CUOTA_DIARIA_GLOBAL", 3000),
+	)
+	middlewares = append(middlewares, limiter.Middleware(), cuota.Middleware())
 
 	api := r.Group("/api/v1", middlewares...)
 	{
@@ -124,7 +136,7 @@ func envInt(nombre string, porDefecto int) int {
 func origenesPermitidos() []string {
 	raw := strings.TrimSpace(os.Getenv("ALLOWED_ORIGINS"))
 	if raw == "" {
-		return []string{"*"}
+		return nil
 	}
 	var origenes []string
 	for _, o := range strings.Split(raw, ",") {

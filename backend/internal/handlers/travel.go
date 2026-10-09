@@ -30,7 +30,8 @@ func (h *TravelHandler) PlanificarViaje(c *gin.Context) {
 	var req models.PlanRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Parámetros inválidos: " + err.Error()})
+		// El detalle de Gin nombra structs internos: no se devuelve al cliente.
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Parámetros inválidos: el pedido no tiene el formato esperado."})
 		return
 	}
 	if err := req.Validar(); err != nil {
@@ -51,7 +52,8 @@ func (h *TravelHandler) PlanificarViaje(c *gin.Context) {
 func (h *TravelHandler) ExtenderCronograma(c *gin.Context) {
 	var req models.ExtenderCronogramaRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Parámetros inválidos: " + err.Error()})
+		// El detalle de Gin nombra structs internos: no se devuelve al cliente.
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Parámetros inválidos: el pedido no tiene el formato esperado."})
 		return
 	}
 	if err := req.Validar(); err != nil {
